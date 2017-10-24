@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ButtonClicked : MonoBehaviour {
+public class Interact : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -13,4 +13,9 @@ public class ButtonClicked : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    void Action()
+    {
+
+    }
 }
