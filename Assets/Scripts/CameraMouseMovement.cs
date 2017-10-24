@@ -49,6 +49,11 @@ public class CameraMouseMovement : MonoBehaviour {
         if(Physics.Raycast(interactIndicator, out interactable, interactDistance, interactableLayer))
         {
             playerCursorImage.color = Color.green;
+            if(Input.GetMouseButtonDown(0))
+            {
+                var interactScript = interactable.collider.GetComponent<Interactable>();
+                interactScript.Interact();
+            }
         }
         else
         {

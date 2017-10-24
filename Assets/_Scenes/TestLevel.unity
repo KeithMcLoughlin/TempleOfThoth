@@ -278,7 +278,7 @@ GameObject:
   - component: {fileID: 1363212578}
   - component: {fileID: 1363212577}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: PlayerUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -371,9 +371,10 @@ GameObject:
   - component: {fileID: 1520074354}
   - component: {fileID: 1520074353}
   - component: {fileID: 1520074352}
-  m_Layer: 0
+  - component: {fileID: 1520074356}
+  m_Layer: 9
   m_Name: Button2
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -445,6 +446,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+--- !u!114 &1520074356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1520074351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b10da41bba8a6ec4b921ae1eb0ec4ec8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1578150542
 GameObject:
   m_ObjectHideFlags: 0
@@ -683,9 +695,10 @@ GameObject:
   - component: {fileID: 1840583790}
   - component: {fileID: 1840583789}
   - component: {fileID: 1840583788}
-  m_Layer: 0
+  - component: {fileID: 1840583792}
+  m_Layer: 9
   m_Name: Button1
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -757,6 +770,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+--- !u!114 &1840583792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1840583787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b10da41bba8a6ec4b921ae1eb0ec4ec8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1904731845
 Prefab:
   m_ObjectHideFlags: 0
@@ -897,6 +921,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114975573376029524, guid: 3f361c5a2965f9741b4466a35897c48c,
+        type: 2}
+      propertyPath: interactDistance
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114975573376029524, guid: 3f361c5a2965f9741b4466a35897c48c,
+        type: 2}
+      propertyPath: playerCursor
+      value: 
+      objectReference: {fileID: 1578150542}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3f361c5a2965f9741b4466a35897c48c, type: 2}
   m_IsPrefabParent: 0
