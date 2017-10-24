@@ -18,7 +18,8 @@ public class CameraMouseMovement : MonoBehaviour {
     {
         player = this.transform.parent.gameObject;
         mouseScalar = new Vector2(sensitivity * smoothing, sensitivity * smoothing);
-	}
+        Cursor.visible = false;
+    }
 	
 	// Update is called once per frame
 	void Update ()
