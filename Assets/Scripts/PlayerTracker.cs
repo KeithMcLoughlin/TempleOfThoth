@@ -3,52 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PlayerTracker : MonoBehaviour {
+public class PlayerTracker : MonoBehaviour
+{
+    public static PlayerTracker Instance { get; private set; }
 
-    static PlayerTracker instance;
-    public static PlayerTracker Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                var PlayerTrackerGameObject = new GameObject();
-                instance = PlayerTrackerGameObject.AddComponent<PlayerTracker>();
-            }
-            return instance;
-        }
-    }
-
-    //the clear colour will be used as a null if there is no clear preferred colour
-    public Color playerMostInteractedColour = Color.clear;
-    GameObject analyticsTestCube;
-    Dictionary<Color, int> colourInteractedAmounts = new Dictionary<Color, int>();
-    LogicAgent agent;
+    public InteractableTracker InteractableTracker;
+    //public VisualTracker VisualTracker;
+    //public MovementTracker MovementTracker;
 
     void Start()
     {
-        agent = LogicAgent.Instance;
-        analyticsTestCube = GameObject.Find("AnalyticTestCube");
+        Instance = this;
     }
 
-	public void ProcessInteractable(InteractableType typeOfInteractable, Color interactableColour)
+    void UpdatePlayerData()
     {
-        int numOfTimesInteracted;
-        //get the number of times colour was interacted with if it already exists in the dictionary
-        if(colourInteractedAmounts.TryGetValue(interactableColour, out numOfTimesInteracted))
-        {
-            colourInteractedAmounts[interactableColour] = ++numOfTimesInteracted;
-        }
-        else
-        {
-            //add new colour with one interaction to the dictionary as it is new
-            colourInteractedAmounts.Add(interactableColour, 1);
-        }
 
-        playerMostInteractedColour = colourInteractedAmounts.FirstOrDefault(x => x.Value == colourInteractedAmounts.Values.Max()).Key;
-
-
-        //NOT NEEDED: temp code for testing agent intialisation
-        agent.IntialiseInteractable(analyticsTestCube);
     }
 }

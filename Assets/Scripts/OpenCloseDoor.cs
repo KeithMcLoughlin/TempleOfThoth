@@ -5,48 +5,32 @@ using UnityEngine;
 public class OpenCloseDoor : MonoBehaviour {
 
     public float speed = 2f;
+    public float openDistance = 10f;
 
     Vector3 openPosition;
     Vector3 closePosition;
-    bool open = true;
-
-	// Use this for initialization
+    PlayerController player;
+    bool playerInRange;
+    
 	void Start ()
     {
-        openPosition = transform.position;
-        closePosition = new Vector3(transform.position.x, transform.position.y - transform.localScale.y, transform.position.z);
-	}
+        var renderer = GetComponent<Renderer>();
+        renderer.material.SetColor("_Color", Color.green);
+        openPosition = new Vector3(transform.position.x, transform.position.y + transform.localScale.y, transform.position.z);
+        closePosition = transform.position;
+        player = PlayerController.Instance;
+        playerInRange = false;
+    }
 	
-	// Update is called once per frame
 	void Update ()
     {
-		if(open)
-        {
-            CloseDoor();
-        }
-        else
-        {
-            OpenDoor();
-        }
-	}
+        playerInRange = Vector3.Distance(player.transform.position, transform.position) < openDistance;
 
-    void OpenDoor()
-    {
-        transform.Translate(0f, speed * Time.deltaTime, 0f);
-        if(transform.position.y >= openPosition.y)
-        {
-            //transform.position.y = openPosition.y;
-            open = true;
-        }
-    }
-
-    void CloseDoor()
-    {
-        transform.Translate(0f, -(speed * Time.deltaTime), 0f);
-        if (transform.position.y <= closePosition.y)
-        {
-            //transform.position.y = closePosition.y;
-            open = false;
-        }
+        //open door
+        if (transform.position.y <= openPosition.y && playerInRange)
+            transform.Translate(0f, speed * Time.deltaTime, 0f);
+        //close door
+        else if (transform.position.y >= closePosition.y && !playerInRange)
+            transform.Translate(0f, -(speed * Time.deltaTime), 0f);
     }
 }

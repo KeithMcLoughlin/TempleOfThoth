@@ -2,13 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum InteractableType
+public interface IInteractable
 {
-    Button,
-    PickUp
-}
-
-public interface Interactable{
-
+    InteractableTraits Traits { get; set; }
     void Interact();
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
+    public static PlayerController Instance { get; private set; }
+
     public float speed = 5f;
     public float jumpHeight = 1.5f;
     public float runSpeedIncrease = 5f;
@@ -13,8 +15,12 @@ public class PlayerController : MonoBehaviour {
     PlayerController playerMovementScript;
     CameraMouseMovement cameraMovementScript;
 
-	// Use this for initialization
-	void Start ()
+    void Awake()
+    {
+        Instance = this;
+    }
+
+    void Start ()
     {
         playerRigidBody = GetComponent<Rigidbody>();
         playerMovementScript = GetComponent<PlayerController>();
@@ -31,6 +37,7 @@ public class PlayerController : MonoBehaviour {
     {
         var horizontalInput = Input.GetAxisRaw("Horizontal");
         var verticalInput = Input.GetAxisRaw("Vertical");
+        //todo fix jump
         var jumpInput = Input.GetAxisRaw("Jump");
         var running = Input.GetAxisRaw("Run") > 0 && verticalInput > 0;
 

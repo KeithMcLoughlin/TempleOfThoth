@@ -9,12 +9,8 @@ public class AlterableObjectManager : MonoBehaviour {
     GameObject button2;
 
 	// Use this for initialization
-	void Start () {
-        /*foreach(GameObject childGameObject in this.transform)
-        {
-            alterableGameObjects.Add(childGameObject);
-        }*/
-
+	void Start ()
+    {
         button1 = GameObject.Find("Button1");
         button2 = GameObject.Find("Button2");
 
