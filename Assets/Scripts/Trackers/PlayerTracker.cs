@@ -7,13 +7,14 @@ public class PlayerTracker : MonoBehaviour
 {
     public static PlayerTracker Instance { get; private set; }
 
-    public InteractableTracker InteractableTracker;
+    public EventTracker EventTracker;
     //public VisualTracker VisualTracker;
     //public MovementTracker MovementTracker;
 
-    void Start()
+    void Awake()
     {
         Instance = this;
+        EventTracker = new EventTracker();
     }
 
     void UpdatePlayerData()

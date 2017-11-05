@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OpenCloseDoor : MonoBehaviour {
+public class Door : MonoBehaviour, ITrackableEvent {
 
     public float speed = 2f;
     public float openDistance = 10f;
+
+    public ObjectTraits Traits { get; private set; }
+    public IEventTracker Tracker { get; private set; }
 
     Vector3 openPosition;
     Vector3 closePosition;
@@ -14,8 +17,10 @@ public class OpenCloseDoor : MonoBehaviour {
     
 	void Start ()
     {
+        Tracker = PlayerTracker.Instance.EventTracker;
+        Traits = new ObjectTraits(Color.green, Position.Left, Size.Medium);
         var renderer = GetComponent<Renderer>();
-        renderer.material.SetColor("_Color", Color.green);
+        renderer.material.SetColor("_Color", Traits.Color);
         openPosition = new Vector3(transform.position.x, transform.position.y + transform.localScale.y, transform.position.z);
         closePosition = transform.position;
         player = PlayerController.Instance;
@@ -32,5 +37,15 @@ public class OpenCloseDoor : MonoBehaviour {
         //close door
         else if (transform.position.y >= closePosition.y && !playerInRange)
             transform.Translate(0f, -(speed * Time.deltaTime), 0f);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        TrackEvent();
+    }
+
+    public void TrackEvent()
+    {
+        Tracker.TrackEvent(this);
     }
 }

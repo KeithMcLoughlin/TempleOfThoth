@@ -1,18 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Analytics;
 
-public class ButtonInteract : MonoBehaviour, IInteractable
-{
-    public InteractableTraits Traits { get; set; }
+public class Pickup : MonoBehaviour, IInteractable, ITrackableEvent {
 
-    IInteractableTracker tracker;
-    Renderer buttonRenderer;
+    public ObjectTraits Traits { get; set; }
+    public IEventTracker Tracker { get; private set; }
+    Renderer pickupRenderer;
 
     // Use this for initialization
-    void Start () {
-        //tracker = PlayerTracker.Instance.InteractableTracker;
+    void Start()
+    {
+        Tracker = PlayerTracker.Instance.EventTracker;
         //buttonRenderer = GetComponent<Renderer>();
         //buttonRenderer.material.SetColor("_Color", Color.green);
     }
@@ -21,6 +20,11 @@ public class ButtonInteract : MonoBehaviour, IInteractable
     {
         //buttonRenderer.material.SetColor("_Color", Color.green);
         //AnalyticsScript.TriggerEvent();
-        tracker.TrackInteraction(this);
+        TrackEvent();
+    }
+
+    public void TrackEvent()
+    {
+        Tracker.TrackEvent(this);
     }
 }

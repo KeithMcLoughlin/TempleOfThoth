@@ -4,6 +4,5 @@ using UnityEngine;
 
 public interface IInteractable
 {
-    InteractableTraits Traits { get; set; }
     void Interact();
 }
