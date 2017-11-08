@@ -6,14 +6,13 @@ using UnityEngine.Analytics;
 public class Button : MonoBehaviour, IInteractable, ITrackableEvent
 {
     public ObjectTraits Traits { get; set; }
-    public IEventTracker Tracker { get; private set; }
     Renderer buttonRenderer;
     
-    void Start () {
-        Tracker = PlayerTracker.Instance.EventTracker;
-        Traits = new ObjectTraits(Color.red, Position.Right, Size.Medium);
+    void Start ()
+    {
+        Traits = new ObjectTraits(Color.red, Direction.Right, Size.Medium);
         buttonRenderer = GetComponent<Renderer>();
-        buttonRenderer.material.SetColor("_Color", Traits.Color);
+        buttonRenderer.material.SetColor("_Color", Traits.Colour);
     }
 
     public void Interact()
@@ -23,6 +22,6 @@ public class Button : MonoBehaviour, IInteractable, ITrackableEvent
 
     public void TrackEvent()
     {
-        Tracker.TrackEvent(this);
+        PlayerTracker.Instance.EventTracker.TrackEvent(this);
     }
 }

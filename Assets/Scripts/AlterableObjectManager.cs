@@ -2,30 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AlterableObjectManager : MonoBehaviour {
+public class AlterableObjectManager : MonoBehaviour
+{
+    public static AlterableObjectManager Instance { get; private set; }
 
-    //List<GameObject> alterableGameObjects = new List<GameObject>();
-    //GameObject button1;
-    //GameObject button2;
+    void Awake()
+    {
+        Instance = this;
+    }
+
+    public static List<Color> UsableColours = 
+        new List<Color> { Color.yellow, Color.red, Color.green, Color.blue, Color.black, Color.cyan, Color.magenta, Color.grey };
+    public static Color GetRandomColour()
+    {
+        return UsableColours[Random.Range(0, UsableColours.Count - 1)];
+    }
+    public static Color GetRandomColour(IList<Color> selectableColours)
+    {
+        return selectableColours[Random.Range(0, selectableColours.Count - 1)];
+    }
+
     ObjectTraits predicatedBestTraits;
     ObjectTraits predicatedWorstTraits;
+    public GameObject firstRoomObject;
 
     void Start ()
     {
-        //temp predicition which we will get from agent after logic applied
-        //predicatedBestTraits = new ObjectTraits(Color.green, Shape.Cube, Position.Left, Size.Medium, InteractableType.PickUp);
-        //predicatedWorstTraits = new ObjectTraits(Color.red, Shape.Cube, Position.Right, Size.Medium, InteractableType.PickUp);
-
-
-
-        //button1 = GameObject.Find("Button1");
-        //button2 = GameObject.Find("Button2");
-
-        //var button1Renderer = button1.GetComponent<Renderer>();
-        //button1Renderer.material.SetColor("_Color", Color.green);
-
-        //var button2Renderer = button2.GetComponent<Renderer>();
-        //button2Renderer.material.SetColor("_Color", Color.red);
+        var beginningRoomScript = firstRoomObject.GetComponent<BeginningRoom>();
+        ObjectTraits effectiveTraits;
+        ObjectTraits ineffectiveTraits;
+        Debug.Log(LogicAgent.Instance);
+        LogicAgent.Instance.CalculatePlayerPreferrences(out effectiveTraits, out ineffectiveTraits);
+        IntialiseRoom(beginningRoomScript, effectiveTraits, ineffectiveTraits);
     }
 	
 	// Update is called once per frame
@@ -34,8 +42,8 @@ public class AlterableObjectManager : MonoBehaviour {
 		
 	}
 
-    void IntialiseObjects(List<GameObject> objects)
+    void IntialiseRoom(ITrialRoom roomScript, ObjectTraits bestTraits, ObjectTraits worstTraits)
     {
-
+        roomScript.IntialiseRoom(bestTraits, worstTraits);
     }
 }

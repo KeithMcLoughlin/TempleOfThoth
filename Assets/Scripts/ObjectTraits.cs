@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //public enum Shape { Cylinder, Sphere, Pyramid, Cuboid, Cube }
-public enum Position { Right, Left, Straight, Behind }
+public enum Direction { Right, Left, Straight, Behind }
 public enum Size { Big, Medium, Small }
 
 public class ObjectTraits
 {
-    public Color Color { get; set; }
+    public Color Colour { get; set; }
     //public Shape Shape { get; set; }
-    public Position Position { get; set; }
+    public Direction Direction { get; set; }
     public Size Size { get; set; }
 
-    public ObjectTraits(Color color, Position position, Size size)
+    public ObjectTraits(Color colour, Direction direction, Size size)
     {
-        Color = color;
-        Position = position;
+        Colour = colour;
+        Direction = direction;
         Size = size;
     }
 }

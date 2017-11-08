@@ -26,12 +26,6 @@ public class PlayerController : MonoBehaviour {
         playerMovementScript = GetComponent<PlayerController>();
         cameraMovementScript = GetComponentInChildren<CameraMouseMovement>();
 	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-		
-	}
 
     void FixedUpdate()
     {
@@ -41,6 +35,7 @@ public class PlayerController : MonoBehaviour {
         var jumpInput = Input.GetAxisRaw("Jump");
         var running = Input.GetAxisRaw("Run") > 0 && verticalInput > 0;
 
+        //todo fix jump
         if(!jumping && jumpInput > 0)
         {
             playerRigidBody.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
@@ -63,6 +58,7 @@ public class PlayerController : MonoBehaviour {
 
     void OnCollisionEnter(Collision collision)
     {
+        //todo fix jump
         if (collision.collider.tag == "Walkable")
            jumping = false;
     }

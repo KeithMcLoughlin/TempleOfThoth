@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerTracker : MonoBehaviour
 {
     public static PlayerTracker Instance { get; private set; }
-
+    
     public EventTracker EventTracker;
     //public VisualTracker VisualTracker;
     //public MovementTracker MovementTracker;
@@ -17,8 +17,8 @@ public class PlayerTracker : MonoBehaviour
         EventTracker = new EventTracker();
     }
 
-    void UpdatePlayerData()
+    public void UpdatePlayerData(ObjectTraits traits)
     {
-
+        PlayerData.Instance.UpdateData(traits);
     }
 }

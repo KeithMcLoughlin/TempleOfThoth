@@ -4,25 +4,25 @@ using UnityEngine;
 
 public class LogicAgent : MonoBehaviour
 {
-    public static LogicAgent Instance { get; set; }
-    List<GameObject> alterableObjects;
+    public static LogicAgent Instance { get; private set; }
 
-
-    void Start()
+    void Awake()
     {
         Instance = this;
     }
 
-	public void IntialiseInteractable(GameObject visualObject)
+    public void CalculatePlayerPreferrences(out ObjectTraits predicatedEffectiveTraits, out ObjectTraits predicatedIneffectiveTraits)
     {
-        /*var interactablesRenderer = visualObject.GetComponent<Renderer>();
-        if (tracker.playerMostInteractedColour != Color.clear)
-        {
-            interactablesRenderer.material.SetColor("_Color", tracker.playerMostInteractedColour);
-        }
-        else
-        {
-            interactablesRenderer.material.SetColor("_Color", Random.ColorHSV());
-        }*/
+        var data = PlayerData.Instance;
+        /*
+        var preferredColour = data.PlayerMostPreferredColour.Equals(Color.clear) ? AlterableObjectManager.GetRandomColour() 
+                                                                                 : data.PlayerMostPreferredColour;
+        var leastPreferredColour = data.PlayerLeastPreferredColour.Equals(Color.clear) ? AlterableObjectManager.GetRandomColour() 
+                                                                                       : data.PlayerLeastPreferredColour;
+        */
+        var preferredColour = Color.green;
+        var leastPreferredColour = Color.red;
+        predicatedEffectiveTraits = new ObjectTraits(preferredColour, Direction.Left, Size.Medium);
+        predicatedIneffectiveTraits = new ObjectTraits(leastPreferredColour, Direction.Right, Size.Medium);
     }
 }

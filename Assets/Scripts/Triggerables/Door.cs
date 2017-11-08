@@ -18,9 +18,9 @@ public class Door : MonoBehaviour, ITrackableEvent {
 	void Start ()
     {
         Tracker = PlayerTracker.Instance.EventTracker;
-        Traits = new ObjectTraits(Color.green, Position.Left, Size.Medium);
+        Traits = new ObjectTraits(Color.green, Direction.Left, Size.Medium);
         var renderer = GetComponent<Renderer>();
-        renderer.material.SetColor("_Color", Traits.Color);
+        renderer.material.SetColor("_Color", Traits.Colour);
         openPosition = new Vector3(transform.position.x, transform.position.y + transform.localScale.y, transform.position.z);
         closePosition = transform.position;
         player = PlayerController.Instance;

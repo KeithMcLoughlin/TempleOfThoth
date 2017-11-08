@@ -19,8 +19,7 @@ public class CameraMouseMovement : MonoBehaviour {
     RaycastHit interactable;
     int interactableLayer;
     Image playerCursorImage;
-
-	// Use this for initialization
+    
 	void Start ()
     {
         player = this.transform.parent.gameObject;
@@ -30,9 +29,10 @@ public class CameraMouseMovement : MonoBehaviour {
         playerCursorImage = playerCursor.GetComponent<Image>();
     }
 	
-	// Update is called once per frame
 	void Update ()
     {
+        //Reference: https://www.youtube.com/watch?v=blO039OzUZc video by Holistic3d, published Apr 23, 2016. Accessed on October 4, 2017
+        //for mouse moving camera and smoothing
         var mouseMovementInput = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
         var adjustedMouseMovement = Vector2.Scale(mouseMovementInput, mouseScalar);
 
@@ -44,11 +44,15 @@ public class CameraMouseMovement : MonoBehaviour {
         transform.localRotation = Quaternion.AngleAxis(-lookingPosition.y, Vector3.right);
         player.transform.rotation = Quaternion.AngleAxis(lookingPosition.x, player.transform.up);
 
+
         interactIndicator.origin = this.transform.position;
         interactIndicator.direction = this.transform.forward;
+        //checks if the player is close enough and facing an interactable
         if(Physics.Raycast(interactIndicator, out interactable, interactDistance, interactableLayer))
         {
+            //change cursor to indicate that player can interact with object
             playerCursorImage.color = Color.green;
+            //if player clicks interactable, execute its interact method
             if(Input.GetMouseButtonDown(0))
             {
                 var interactScript = interactable.collider.GetComponent<IInteractable>();
@@ -57,6 +61,7 @@ public class CameraMouseMovement : MonoBehaviour {
         }
         else
         {
+            //if not close to an interactable, keep cursor as red
             playerCursorImage.color = Color.red;
         }
     }
