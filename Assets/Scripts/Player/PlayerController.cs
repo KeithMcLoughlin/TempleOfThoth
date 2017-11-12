@@ -74,9 +74,12 @@ public class PlayerController : MonoBehaviour {
         transform.Translate(xMovement, 0, zMovement);
     }
 
-    void Dead()
+    public void Dead()
     {
         playerMovementScript.enabled = false;
         cameraMovementScript.enabled = false;
+
+        playerRigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
+        transform.Rotate(Vector3.forward);
     }
 }

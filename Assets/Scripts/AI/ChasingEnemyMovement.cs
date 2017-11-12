@@ -7,11 +7,13 @@ public class ChasingEnemyMovement : MonoBehaviour {
 
     PlayerController player;
     NavMeshAgent navMesh;
+    bool playerInRange;
 
 	void Start ()
     {
         player = PlayerController.Instance;
         navMesh = GetComponent<NavMeshAgent>();
+        playerInRange = false;
 	}
 	
 	void Update ()
@@ -21,6 +23,25 @@ public class ChasingEnemyMovement : MonoBehaviour {
         if(navMesh.CalculatePath(player.transform.position, path))
         {
             navMesh.SetPath(path);
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject == player.gameObject)
+        {
+            playerInRange = true;
+            player.Dead();
+            navMesh.ResetPath();
+            this.enabled = false;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject == player)
+        {
+            playerInRange = false;
         }
     }
 }
