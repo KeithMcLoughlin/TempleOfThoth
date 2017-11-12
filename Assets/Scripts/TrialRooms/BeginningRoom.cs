@@ -17,7 +17,7 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
     Renderer rightGoalIndicatorRenderer;
     Renderer middleGoalIndicatorRenderer;
 
-    void Start ()
+    void Awake ()
     {
         leftGoalIndicatorRenderer = LeftGoalIndicator.GetComponent<Renderer>();
         rightGoalIndicatorRenderer = RightGoalIndicator.GetComponent<Renderer>();

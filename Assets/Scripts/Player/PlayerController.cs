@@ -6,11 +6,11 @@ public class PlayerController : MonoBehaviour {
 
     public static PlayerController Instance { get; private set; }
 
-    public float speed = 5f;
-    public float jumpHeight = 1.5f;
-    public float runSpeedIncrease = 5f;
+    public float speed = 5f; //speed value for player movement and jumping
+    public float runSpeedIncrease = 5f; //the multiple increase in speed when running
+    public float maxJumpDuration = 1.0f; //how long the player will rise when jumping
     bool jumping = false;
-    float peakOfJump;
+    float currentJumpDuration;
     Rigidbody playerRigidBody;
     PlayerController playerMovementScript;
     CameraMouseMovement cameraMovementScript;
@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour {
     void Awake()
     {
         Instance = this;
+        currentJumpDuration = 0.0f;
     }
 
     void Start ()
@@ -31,36 +32,46 @@ public class PlayerController : MonoBehaviour {
     {
         var horizontalInput = Input.GetAxisRaw("Horizontal");
         var verticalInput = Input.GetAxisRaw("Vertical");
-        //todo fix jump
         var jumpInput = Input.GetAxisRaw("Jump");
+        //player is running only if the run button is pressed and they are moving forward
+        //they cannot run backwards or sideways
         var running = Input.GetAxisRaw("Run") > 0 && verticalInput > 0;
-
-        //todo fix jump
-        if(!jumping && jumpInput > 0)
-        {
-            playerRigidBody.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
-            jumping = true;
-        }
-
+        
         Move(horizontalInput, verticalInput, running);
+        Jump(jumpInput);
+    }
+
+    void Jump(float jumpInput)
+    {
+        //if pressing the jump button and not currently jumping
+        if (!jumping && jumpInput > 0)
+            jumping = true;
+
+        if (jumping)
+        {
+            //increase players Y while jumping
+            var yMovement = speed * Time.deltaTime;
+            transform.Translate(0, yMovement, 0);
+
+            currentJumpDuration += maxJumpDuration * Time.deltaTime;
+            //stop jumping if the duration has been hit
+            if (currentJumpDuration > maxJumpDuration)
+            {
+                currentJumpDuration = 0.0f;
+                jumping = false;
+            }
+        }
     }
 
     void Move(float horizontal, float vertical, bool running)
     {
         var zMovement = vertical * speed * Time.deltaTime;
         var xMovement = horizontal * speed * Time.deltaTime;
-        var yMovement = jumping ? speed * Time.deltaTime : 0f;
 
+        //increase forward speed if running
         if (running) zMovement *= runSpeedIncrease;
 
-        transform.Translate(xMovement, yMovement, zMovement);
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        //todo fix jump
-        if (collision.collider.tag == "Walkable")
-           jumping = false;
+        transform.Translate(xMovement, 0, zMovement);
     }
 
     void Dead()
