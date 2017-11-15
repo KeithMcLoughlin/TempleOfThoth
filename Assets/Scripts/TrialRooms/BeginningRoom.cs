@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class BeginningRoom : MonoBehaviour, ITrialRoom {
 
-    public GameObject LeftDoor;
-    public GameObject RightDoor;
-    public GameObject MiddleDoor;
-    public GameObject LeftButton;
-    public GameObject RightButton;
-    public GameObject LeftGoalIndicator;
-    public GameObject RightGoalIndicator;
-    public GameObject MiddleGoalIndicator;
+    //GameObject LeftDoor;
+    //GameObject RightDoor;
+    //GameObject FrontDoor;
+    //GameObject BackDoor;
+    //GameObject LeftButton;
+    //GameObject RightButton;
+    //GameObject LeftGoalIndicator;
+    //GameObject RightGoalIndicator;
+    //GameObject MiddleGoalIndicator;
+    public GameObject Room;
 
     Renderer leftGoalIndicatorRenderer;
     Renderer rightGoalIndicatorRenderer;
@@ -19,9 +21,9 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
 
     void Awake ()
     {
-        leftGoalIndicatorRenderer = LeftGoalIndicator.GetComponent<Renderer>();
-        rightGoalIndicatorRenderer = RightGoalIndicator.GetComponent<Renderer>();
-        middleGoalIndicatorRenderer = MiddleGoalIndicator.GetComponent<Renderer>();
+        //leftGoalIndicatorRenderer = LeftGoalIndicator.GetComponent<Renderer>();
+        //rightGoalIndicatorRenderer = RightGoalIndicator.GetComponent<Renderer>();
+        //middleGoalIndicatorRenderer = MiddleGoalIndicator.GetComponent<Renderer>();
     }
     
     void Update ()
@@ -29,9 +31,33 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
 		
 	}
 
+    //return the created room
+    public GameObject Intialise(Vector3 position)
+    {
+        //https://answers.unity.com/questions/12003/instantiate-a-prefab-through-code-in-c.html, Accessed: 15/11/2017
+        Room = Instantiate(Resources.Load("BeginningRoomTemplate"), position, new Quaternion()) as GameObject;
+        
+        SetupDoorway("BackWall");
+        SetupDoorway("FrontWall");
+        SetupDoorway("LeftWall");
+        SetupDoorway("RightWall");
+
+        return Room;
+    }
+
+    void SetupDoorway(string Wall)
+    {
+        var wallTransform = Room.transform.Find(Wall);
+        var door = wallTransform.Find("DoorwayCorridor");
+        var leftWall = wallTransform.Find("LeftDoorwayWall");
+        var rightWall = wallTransform.Find("RightDoorwayWall");
+
+        door.localPosition = new Vector3(door.localPosition.x, door.localPosition.y, Random.Range(rightWall.localPosition.z, leftWall.localPosition.z));
+    }
+
     public void IntialiseRoom(ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits)
     {
-        var objects = new List<GameObject> { LeftDoor, RightDoor, MiddleDoor, LeftButton, RightButton };
+        //var objects = new List<GameObject> { LeftDoor, RightDoor, MiddleDoor, LeftButton, RightButton };
         var colours = new List<Color>(AlterableObjectManager.UsableColours);
 
         //set all goal objects red at start
@@ -40,7 +66,7 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
         middleGoalIndicatorRenderer.material.SetColor("_Color", Color.red);
 
         //based on predicted least effective direction, place goal there and make goal object green
-        switch (ineffectiveTraits.Direction)
+        /*switch (ineffectiveTraits.Direction)
         {
             case Direction.Left:
             {
@@ -104,7 +130,7 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
             var randomColour = AlterableObjectManager.GetRandomColour(colours);
             obj.GetComponent<Renderer>().material.SetColor("_Color", randomColour);
             colours.Remove(randomColour);
-        }
+        }*/
     }
 
     private class AlterableObject

@@ -24,16 +24,21 @@ public class AlterableObjectManager : MonoBehaviour
 
     ObjectTraits predicatedBestTraits;
     ObjectTraits predicatedWorstTraits;
-    public GameObject firstRoomObject;
+    GameObject firstRoomObject;
+    GameObject player;
 
     void Start ()
     {
-        var beginningRoomScript = firstRoomObject.GetComponent<BeginningRoom>();
-        ObjectTraits effectiveTraits;
+        var beginningRoomScript = GetComponent<BeginningRoom>();
+        var room = beginningRoomScript.Intialise(new Vector3(200, 0, 0));
+
+        PlayerController.Instance.transform.position = room.transform.Find("StartPoint").position;
+
+        /*ObjectTraits effectiveTraits;
         ObjectTraits ineffectiveTraits;
         Debug.Log(LogicAgent.Instance);
         LogicAgent.Instance.CalculatePlayerPreferrences(out effectiveTraits, out ineffectiveTraits);
-        IntialiseRoom(beginningRoomScript, effectiveTraits, ineffectiveTraits);
+        IntialiseRoom(beginningRoomScript, effectiveTraits, ineffectiveTraits);*/
     }
 	
 	// Update is called once per frame
