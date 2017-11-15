@@ -15,15 +15,9 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
     //GameObject MiddleGoalIndicator;
     public GameObject Room;
 
-    Renderer leftGoalIndicatorRenderer;
-    Renderer rightGoalIndicatorRenderer;
-    Renderer middleGoalIndicatorRenderer;
-
     void Awake ()
     {
-        //leftGoalIndicatorRenderer = LeftGoalIndicator.GetComponent<Renderer>();
-        //rightGoalIndicatorRenderer = RightGoalIndicator.GetComponent<Renderer>();
-        //middleGoalIndicatorRenderer = MiddleGoalIndicator.GetComponent<Renderer>();
+
     }
     
     void Update ()
@@ -32,7 +26,7 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
 	}
 
     //return the created room
-    public GameObject Intialise(Vector3 position)
+    public GameObject Intialise(Vector3 position, ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits)
     {
         //https://answers.unity.com/questions/12003/instantiate-a-prefab-through-code-in-c.html, Accessed: 15/11/2017
         Room = Instantiate(Resources.Load("BeginningRoomTemplate"), position, new Quaternion()) as GameObject;
@@ -53,6 +47,7 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
         var rightWall = wallTransform.Find("RightDoorwayWall");
         var halfCorridorWidth = door.Find("Roof").localScale.z / 2;
 
+        /* move the door between a range and adjust the walls either side of it */
         //pick random position for corridor
         door.localPosition = new Vector3(door.localPosition.x, door.localPosition.y, Random.Range(rightWall.localPosition.z + halfCorridorWidth, leftWall.localPosition.z - halfCorridorWidth));
         //find the difference between the left walls position and corridors left side
@@ -70,15 +65,10 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
         rightWall.localScale = new Vector3(rightWall.localScale.x, rightWall.localScale.y, rightWallToCorridor);
     }
 
-    public void IntialiseRoom(ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits)
+    public void IntialiseTraits(ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits)
     {
         //var objects = new List<GameObject> { LeftDoor, RightDoor, MiddleDoor, LeftButton, RightButton };
         var colours = new List<Color>(AlterableObjectManager.UsableColours);
-
-        //set all goal objects red at start
-        leftGoalIndicatorRenderer.material.SetColor("_Color", Color.red);
-        rightGoalIndicatorRenderer.material.SetColor("_Color", Color.red);
-        middleGoalIndicatorRenderer.material.SetColor("_Color", Color.red);
 
         //based on predicted least effective direction, place goal there and make goal object green
         /*switch (ineffectiveTraits.Direction)

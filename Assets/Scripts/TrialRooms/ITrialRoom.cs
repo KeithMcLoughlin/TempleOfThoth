@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface ITrialRoom
 {
-    void IntialiseRoom(ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits);
+    void IntialiseTraits(ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits);
 }

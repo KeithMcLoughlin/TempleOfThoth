@@ -29,16 +29,15 @@ public class AlterableObjectManager : MonoBehaviour
 
     void Start ()
     {
-        var beginningRoomScript = GetComponent<BeginningRoom>();
-        var room = beginningRoomScript.Intialise(new Vector3(200, 0, 0));
-
-        PlayerController.Instance.transform.position = room.transform.Find("StartPoint").position;
-
-        /*ObjectTraits effectiveTraits;
+        ObjectTraits effectiveTraits;
         ObjectTraits ineffectiveTraits;
         Debug.Log(LogicAgent.Instance);
         LogicAgent.Instance.CalculatePlayerPreferrences(out effectiveTraits, out ineffectiveTraits);
-        IntialiseRoom(beginningRoomScript, effectiveTraits, ineffectiveTraits);*/
+        //IntialiseRoom(beginningRoomScript, effectiveTraits, ineffectiveTraits);
+        var beginningRoomScript = GetComponent<BeginningRoom>();
+        var room = beginningRoomScript.Intialise(new Vector3(200, 0, 0), effectiveTraits, ineffectiveTraits);
+
+        PlayerController.Instance.transform.position = room.transform.Find("StartPoint").position;
     }
 	
 	// Update is called once per frame
@@ -49,6 +48,6 @@ public class AlterableObjectManager : MonoBehaviour
 
     void IntialiseRoom(ITrialRoom roomScript, ObjectTraits bestTraits, ObjectTraits worstTraits)
     {
-        roomScript.IntialiseRoom(bestTraits, worstTraits);
+        roomScript.IntialiseTraits(bestTraits, worstTraits);
     }
 }
