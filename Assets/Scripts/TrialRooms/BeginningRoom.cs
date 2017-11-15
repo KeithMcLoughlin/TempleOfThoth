@@ -51,8 +51,23 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
         var door = wallTransform.Find("DoorwayCorridor");
         var leftWall = wallTransform.Find("LeftDoorwayWall");
         var rightWall = wallTransform.Find("RightDoorwayWall");
+        var halfCorridorWidth = door.Find("Roof").localScale.z / 2;
 
-        door.localPosition = new Vector3(door.localPosition.x, door.localPosition.y, Random.Range(rightWall.localPosition.z, leftWall.localPosition.z));
+        //pick random position for corridor
+        door.localPosition = new Vector3(door.localPosition.x, door.localPosition.y, Random.Range(rightWall.localPosition.z + halfCorridorWidth, leftWall.localPosition.z - halfCorridorWidth));
+        //find the difference between the left walls position and corridors left side
+        var leftWallToCorridor = leftWall.localPosition.z - (door.localPosition.z + halfCorridorWidth);
+        //move the point halfway between them
+        leftWall.localPosition = new Vector3(leftWall.localPosition.x, leftWall.localPosition.y, leftWall.localPosition.z - (leftWallToCorridor / 2));
+        //fix the scale to fill the left side
+        leftWall.localScale = new Vector3(leftWall.localScale.x, leftWall.localScale.y, leftWallToCorridor);
+
+        //find the difference between the right walls position and corridors right side
+        var rightWallToCorridor = (door.localPosition.z - halfCorridorWidth) - rightWall.localPosition.z;
+        //move the point halfway between them
+        rightWall.localPosition = new Vector3(rightWall.localPosition.x, rightWall.localPosition.y, rightWall.localPosition.z + (rightWallToCorridor / 2));
+        //fix the scale to fill the right side
+        rightWall.localScale = new Vector3(rightWall.localScale.x, rightWall.localScale.y, rightWallToCorridor);
     }
 
     public void IntialiseRoom(ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits)
