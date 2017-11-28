@@ -6,13 +6,14 @@ using UnityEngine.AI;
 public class ChasingEnemyMovement : MonoBehaviour {
 
     PlayerController player;
-    NavMeshAgent navMesh;
+    NavMeshAgent navAgent;
     bool playerInRange;
 
 	void Start ()
     {
+        //get a reference to the player
         player = PlayerController.Instance;
-        navMesh = GetComponent<NavMeshAgent>();
+        navAgent = GetComponent<NavMeshAgent>();
         playerInRange = false;
 	}
 	
@@ -20,19 +21,20 @@ public class ChasingEnemyMovement : MonoBehaviour {
     {
         //when the player enters the nav mesh, start chasing them
         var path = new NavMeshPath();
-        if(navMesh.CalculatePath(player.transform.position, path))
+        if(navAgent.CalculatePath(player.transform.position, path))
         {
-            navMesh.SetPath(path);
+            navAgent.SetPath(path);
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
+        //if the ai contacts the player, kill the player and stop chasing
         if (other.gameObject == player.gameObject)
         {
             playerInRange = true;
             player.Dead();
-            navMesh.ResetPath();
+            navAgent.ResetPath();
             this.enabled = false;
         }
     }

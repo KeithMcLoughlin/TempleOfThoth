@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface ITrialRoom
 {
-    void IntialiseTraits(ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits);
+    GameObject Intialise(Vector3 position, ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits);
 }

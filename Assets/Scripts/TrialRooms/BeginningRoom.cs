@@ -4,144 +4,111 @@ using UnityEngine;
 
 public class BeginningRoom : MonoBehaviour, ITrialRoom {
 
-    //GameObject LeftDoor;
-    //GameObject RightDoor;
-    //GameObject FrontDoor;
-    //GameObject BackDoor;
-    //GameObject LeftButton;
-    //GameObject RightButton;
-    //GameObject LeftGoalIndicator;
-    //GameObject RightGoalIndicator;
-    //GameObject MiddleGoalIndicator;
-    public GameObject Room;
+    GameObject Room;
+    Color goalColour;
+    string goalDirection;
+    Color discouragedColour;
+    string discouragedDirection;
 
-    void Awake ()
+    List<Color> UsableColours = new List<Color> { Color.yellow, Color.red, Color.green, Color.blue, Color.black, Color.cyan, Color.magenta, Color.grey };
+    Color GetRandomColour(IList<Color> selectableColours)
     {
-
+        return selectableColours[Random.Range(0, selectableColours.Count - 1)];
     }
-    
-    void Update ()
-    {
-		
-	}
 
     //return the created room
     public GameObject Intialise(Vector3 position, ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits)
     {
-        //https://answers.unity.com/questions/12003/instantiate-a-prefab-through-code-in-c.html, Accessed: 15/11/2017
+        //Instantiate a prefab through code in C#. - Unity Answers [Internet]. [cited 2017 Nov 15]. 
+        //Available from: https://answers.unity.com/questions/12003/instantiate-a-prefab-through-code-in-c.html
+        //instantiate on instance of this rooms prefab from the resources folder
         Room = Instantiate(Resources.Load("BeginningRoomTemplate"), position, new Quaternion()) as GameObject;
-        
+
+        SetGoalPathAndDiscouragedPath(effectiveTraits, ineffectiveTraits);
+        UsableColours.Remove(goalColour);
+        UsableColours.Remove(discouragedColour);
+
         SetupDoorway("BackWall");
         SetupDoorway("FrontWall");
         SetupDoorway("LeftWall");
         SetupDoorway("RightWall");
-
+        
         return Room;
     }
 
     void SetupDoorway(string Wall)
     {
         var wallTransform = Room.transform.Find(Wall);
-        var door = wallTransform.Find("DoorwayCorridor");
+        var doorwayCorridor = wallTransform.Find("DoorwayCorridor");
         var leftWall = wallTransform.Find("LeftDoorwayWall");
         var rightWall = wallTransform.Find("RightDoorwayWall");
-        var halfCorridorWidth = door.Find("Roof").localScale.z / 2;
+        var halfCorridorWidth = doorwayCorridor.Find("Roof").localScale.z / 2;
 
         /* move the door between a range and adjust the walls either side of it */
         //pick random position for corridor
-        door.localPosition = new Vector3(door.localPosition.x, door.localPosition.y, Random.Range(rightWall.localPosition.z + halfCorridorWidth, leftWall.localPosition.z - halfCorridorWidth));
+        doorwayCorridor.localPosition = new Vector3(doorwayCorridor.localPosition.x, doorwayCorridor.localPosition.y, Random.Range(rightWall.localPosition.z + halfCorridorWidth, leftWall.localPosition.z - halfCorridorWidth));
         //find the difference between the left walls position and corridors left side
-        var leftWallToCorridor = leftWall.localPosition.z - (door.localPosition.z + halfCorridorWidth);
+        var leftWallToCorridor = leftWall.localPosition.z - (doorwayCorridor.localPosition.z + halfCorridorWidth);
         //move the point halfway between them
         leftWall.localPosition = new Vector3(leftWall.localPosition.x, leftWall.localPosition.y, leftWall.localPosition.z - (leftWallToCorridor / 2));
         //fix the scale to fill the left side
         leftWall.localScale = new Vector3(leftWall.localScale.x, leftWall.localScale.y, leftWallToCorridor);
 
         //find the difference between the right walls position and corridors right side
-        var rightWallToCorridor = (door.localPosition.z - halfCorridorWidth) - rightWall.localPosition.z;
+        var rightWallToCorridor = (doorwayCorridor.localPosition.z - halfCorridorWidth) - rightWall.localPosition.z;
         //move the point halfway between them
         rightWall.localPosition = new Vector3(rightWall.localPosition.x, rightWall.localPosition.y, rightWall.localPosition.z + (rightWallToCorridor / 2));
         //fix the scale to fill the right side
         rightWall.localScale = new Vector3(rightWall.localScale.x, rightWall.localScale.y, rightWallToCorridor);
+
+        //set the predicted corridor the player will choose to the goal colour
+        if(Wall.Equals(goalDirection))
+        {
+            Debug.Log("Setting up goal path which is: " + goalDirection + " with the colour " + goalColour);
+            SetColourForCorridorDoors(goalColour, doorwayCorridor);
+        }
+        else if(Wall.Equals(discouragedDirection))
+        {
+            Debug.Log("Setting up discouraged path which is: " + discouragedDirection + " with the colour " + discouragedDirection);
+            SetColourForCorridorDoors(discouragedColour, doorwayCorridor);
+        }
+        else
+        {
+            var randomColour = GetRandomColour(UsableColours);
+            SetColourForCorridorDoors(randomColour, doorwayCorridor);
+            UsableColours.Remove(randomColour);
+        }
     }
 
-    public void IntialiseTraits(ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits)
+    void SetColourForCorridorDoors(Color colourToSet, Transform corridor)
     {
-        //var objects = new List<GameObject> { LeftDoor, RightDoor, MiddleDoor, LeftButton, RightButton };
-        var colours = new List<Color>(AlterableObjectManager.UsableColours);
+        //set the colour for the front door
+        var frontDoorway = corridor.Find("FrontDoorway");
+        frontDoorway.Find("Door").GetComponent<Renderer>().material.SetColor("_Color", colourToSet);
 
-        //based on predicted least effective direction, place goal there and make goal object green
-        /*switch (ineffectiveTraits.Direction)
-        {
-            case Direction.Left:
-            {
-                LeftDoor.GetComponent<Renderer>().material.SetColor("_Color", ineffectiveTraits.Colour);
-                leftGoalIndicatorRenderer.material.SetColor("_Color", Color.green);
-                LeftButton.GetComponent<Renderer>().material.SetColor("_Color", ineffectiveTraits.Colour);
-                objects.Remove(LeftDoor);
-                objects.Remove(LeftButton);
-                break;
-            }
-            case Direction.Right:
-            {
-                RightDoor.GetComponent<Renderer>().material.SetColor("_Color", ineffectiveTraits.Colour);
-                rightGoalIndicatorRenderer.material.SetColor("_Color", Color.green);
-                RightButton.GetComponent<Renderer>().material.SetColor("_Color", ineffectiveTraits.Colour);
-                objects.Remove(RightDoor);
-                objects.Remove(RightButton);
-                break;
-            }
-            case Direction.Straight:
-            {
-                MiddleDoor.GetComponent<Renderer>().material.SetColor("_Color", ineffectiveTraits.Colour);
-                middleGoalIndicatorRenderer.material.SetColor("_Color", Color.green);
-                objects.Remove(MiddleDoor);
-                break;
-            }
-        }
-
-        //based on predicted most effective direction 
-        switch (effectiveTraits.Direction)
-        {
-            case Direction.Left:
-            {
-                LeftDoor.GetComponent<Renderer>().material.SetColor("_Color", effectiveTraits.Colour);
-                LeftButton.GetComponent<Renderer>().material.SetColor("_Color", effectiveTraits.Colour);
-                objects.Remove(LeftDoor);
-                objects.Remove(LeftButton);
-                break;
-            }
-            case Direction.Right:
-            {
-                RightDoor.GetComponent<Renderer>().material.SetColor("_Color", effectiveTraits.Colour);
-                RightButton.GetComponent<Renderer>().material.SetColor("_Color", effectiveTraits.Colour);
-                objects.Remove(RightDoor);
-                objects.Remove(RightButton);
-                break;
-            }
-            case Direction.Straight:
-            {
-                MiddleDoor.GetComponent<Renderer>().material.SetColor("_Color", effectiveTraits.Colour);
-                objects.Remove(MiddleDoor);
-                break;
-            }
-        }
-
-        colours.Remove(effectiveTraits.Colour);
-        colours.Remove(ineffectiveTraits.Colour);
-        //change the colour of the rest of the objects that havent been assigned a colour and make sure none repeat
-        foreach(var obj in objects)
-        {
-            var randomColour = AlterableObjectManager.GetRandomColour(colours);
-            obj.GetComponent<Renderer>().material.SetColor("_Color", randomColour);
-            colours.Remove(randomColour);
-        }*/
+        //set the colour for the back door
+        var backDoorway = corridor.Find("BackDoorway");
+        backDoorway.Find("Door").GetComponent<Renderer>().material.SetColor("_Color", colourToSet);
     }
 
-    private class AlterableObject
+    void SetGoalPathAndDiscouragedPath(ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits)
     {
-        GameObject alterableObject;
-        Renderer alterableRenderer;
-        bool goal = false;
+        goalColour = effectiveTraits.Colour;
+        switch(effectiveTraits.Direction)
+        {
+            case Direction.Left: { goalDirection = "LeftWall"; break; }
+            case Direction.Right: { goalDirection = "RightWall"; break; }
+            case Direction.Straight: { goalDirection = "FrontWall"; break; }
+            case Direction.Behind: { goalDirection = "BackWall"; break; }
+        }
+
+        discouragedColour = ineffectiveTraits.Colour;
+        switch (ineffectiveTraits.Direction)
+        {
+            case Direction.Left: { discouragedDirection = "LeftWall"; break; }
+            case Direction.Right: { discouragedDirection = "RightWall"; break; }
+            case Direction.Straight: { discouragedDirection = "FrontWall"; break; }
+            case Direction.Behind: { discouragedDirection = "BackWall"; break; }
+        }
     }
 }

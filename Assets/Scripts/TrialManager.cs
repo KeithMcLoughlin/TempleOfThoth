@@ -2,24 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AlterableObjectManager : MonoBehaviour
+public class TrialManager : MonoBehaviour
 {
-    public static AlterableObjectManager Instance { get; private set; }
+    public static TrialManager Instance { get; private set; }
 
     void Awake()
     {
         Instance = this;
-    }
-
-    public static List<Color> UsableColours = 
-        new List<Color> { Color.yellow, Color.red, Color.green, Color.blue, Color.black, Color.cyan, Color.magenta, Color.grey };
-    public static Color GetRandomColour()
-    {
-        return UsableColours[Random.Range(0, UsableColours.Count - 1)];
-    }
-    public static Color GetRandomColour(IList<Color> selectableColours)
-    {
-        return selectableColours[Random.Range(0, selectableColours.Count - 1)];
     }
 
     ObjectTraits predicatedBestTraits;
@@ -31,7 +20,7 @@ public class AlterableObjectManager : MonoBehaviour
     {
         ObjectTraits effectiveTraits;
         ObjectTraits ineffectiveTraits;
-        Debug.Log(LogicAgent.Instance);
+        Debug.Log("Querying Logic Agent");
         LogicAgent.Instance.CalculatePlayerPreferrences(out effectiveTraits, out ineffectiveTraits);
         //IntialiseRoom(beginningRoomScript, effectiveTraits, ineffectiveTraits);
         var beginningRoomScript = GetComponent<BeginningRoom>();
@@ -40,14 +29,8 @@ public class AlterableObjectManager : MonoBehaviour
         PlayerController.Instance.transform.position = room.transform.Find("StartPoint").position;
     }
 	
-	// Update is called once per frame
 	void Update ()
     {
 		
 	}
-
-    void IntialiseRoom(ITrialRoom roomScript, ObjectTraits bestTraits, ObjectTraits worstTraits)
-    {
-        roomScript.IntialiseTraits(bestTraits, worstTraits);
-    }
 }

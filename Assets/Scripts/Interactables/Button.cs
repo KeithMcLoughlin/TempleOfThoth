@@ -17,6 +17,7 @@ public class Button : MonoBehaviour, IInteractable, ITrackableEvent
 
     public void Interact()
     {
+        //track the interaction
         TrackEvent();
     }
 

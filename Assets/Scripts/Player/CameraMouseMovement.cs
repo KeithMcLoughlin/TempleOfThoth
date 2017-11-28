@@ -31,20 +31,26 @@ public class CameraMouseMovement : MonoBehaviour {
 	
 	void Update ()
     {
-        //Reference: https://www.youtube.com/watch?v=blO039OzUZc video by Holistic3d, published Apr 23, 2016. Accessed on October 4, 2017
+        //Holistic3d. How to construct a simple First Person Controller with Camera Mouse Look in Unity 5[Internet]. [cited 2017 Oct 4].
+        //Available from: https://www.youtube.com/watch?v=blO039OzUZc
         //for mouse moving camera and smoothing
         var mouseMovementInput = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
         var adjustedMouseMovement = Vector2.Scale(mouseMovementInput, mouseScalar);
 
+        //calculate the smoothing required for the camera movement
         smoothingVector.x = Mathf.Lerp(smoothingVector.x, adjustedMouseMovement.x, 1f / smoothing);
         smoothingVector.y = Mathf.Lerp(smoothingVector.y, adjustedMouseMovement.y, 1f / smoothing);
         lookingPosition += smoothingVector;
+        //prevent the player from being able to flip the camera on the y axis
         lookingPosition.y = Mathf.Clamp(lookingPosition.y, -maxVerticalRotation, maxVerticalRotation);
 
+        //rotate the camera
         transform.localRotation = Quaternion.AngleAxis(-lookingPosition.y, Vector3.right);
+        //rotate the player
         player.transform.rotation = Quaternion.AngleAxis(lookingPosition.x, player.transform.up);
 
-
+        
+        //setup the ray for determining if the player can interact with an interactable
         interactIndicator.origin = this.transform.position;
         interactIndicator.direction = this.transform.forward;
         //checks if the player is close enough and facing an interactable
