@@ -69,7 +69,7 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
         }
         else if(Wall.Equals(discouragedDirection))
         {
-            Debug.Log("Setting up discouraged path which is: " + discouragedDirection + " with the colour " + discouragedDirection);
+            Debug.Log("Setting up discouraged path which is: " + discouragedDirection + " with the colour " + discouragedColour);
             SetColourForCorridorDoors(discouragedColour, doorwayCorridor);
         }
         else
