@@ -32,6 +32,8 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
         SetupDoorway("FrontWall");
         SetupDoorway("LeftWall");
         SetupDoorway("RightWall");
+
+        Debug.Log("Room Intialised");
         
         return Room;
     }
