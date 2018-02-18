@@ -9,12 +9,13 @@ using Assets.Scripts.Data;
 public class PlayerData : MonoBehaviour
 {
     public static PlayerData Instance { get; private set; }
+    public BsonValue CurrentUserID;
     List<Color> UsableColours = new List<Color> { Color.yellow, Color.red, Color.green, Color.blue, Color.black, Color.cyan, Color.magenta, Color.grey };
 
     void Awake()
     {
+        DontDestroyOnLoad(transform.gameObject);
         Instance = this;
-        
     }
 
     public void InsertNewUserToDatabase(UserDetails details)
@@ -24,8 +25,13 @@ public class PlayerData : MonoBehaviour
         MongoDatabase db = server.GetDatabase("templeofthothstats");
         MongoCollection<BsonDocument> users = db.GetCollection<BsonDocument>("users");
 
+        //convert details to bson document in order to retrieve its appointed id
+        var detailsDocument = details.ToBsonDocument();
+
         //insert a user
-        users.Insert(details);
+        users.Insert(detailsDocument);
+        CurrentUserID = detailsDocument["_id"];
+        Debug.Log("New users id is: " + CurrentUserID);
     }
 
     public void UpdateData(ObjectTraits traits)
