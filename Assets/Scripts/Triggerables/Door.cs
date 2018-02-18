@@ -1,14 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.Trackers;
 
-public class Door : MonoBehaviour, ITrackableEvent {
+public class Door : TrackableEventObject {
 
     public float speed = 2f; //speed the door opens and closes
     public float openDistance = 10f; //the distance the player needs to be to the door before it begins to open
-
-    public ObjectTraits Traits { get; private set; }
-    public IEventTracker Tracker { get; private set; }
 
     //stores the positions that represent the door when it is open or closed
     Vector3 openPosition; 
@@ -19,7 +17,9 @@ public class Door : MonoBehaviour, ITrackableEvent {
     
 	void Start ()
     {
-        Tracker = PlayerTracker.Instance.EventTracker;
+        var renderer = GetComponent<Renderer>();
+        var doorColour = renderer.material.GetColor("_Color");
+        Traits = new ObjectTraits(doorColour, Direction.Left, Size.Medium);
 
         //close position is where the door start and the open position is the doors height up on the y axis
         openPosition = new Vector3(transform.position.x, transform.position.y + transform.localScale.y, transform.position.z);
@@ -44,13 +44,5 @@ public class Door : MonoBehaviour, ITrackableEvent {
     private void OnTriggerEnter(Collider other)
     {
         TrackEvent();
-    }
-
-    public void TrackEvent()
-    {
-        var renderer = GetComponent<Renderer>();
-        var doorColour = renderer.material.GetColor("_Color");
-        Traits = new ObjectTraits(doorColour, Direction.Left, Size.Medium);
-        Tracker.TrackEvent(this);
     }
 }

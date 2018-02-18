@@ -33,7 +33,7 @@ public class ChasingEnemyMovement : MonoBehaviour {
         if (other.gameObject == player.gameObject)
         {
             playerInRange = true;
-            player.Dead();
+            player.Dead(); //note: doesnt have to kill player
             navAgent.ResetPath();
             this.enabled = false;
         }

@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.Trackers;
 
 public interface IEventTracker
 {
-    void TrackEvent(ITrackableEvent eventObject);
+    void TrackEvent(TrackableEventObject eventObject);
 }

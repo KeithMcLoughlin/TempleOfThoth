@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Analytics;
+using Assets.Scripts.Trackers;
 
-public class Button : MonoBehaviour, IInteractable, ITrackableEvent
+public class Button : TrackableEventObject, IInteractable
 {
-    public ObjectTraits Traits { get; set; }
     Renderer buttonRenderer;
     
     void Start ()
@@ -17,12 +17,6 @@ public class Button : MonoBehaviour, IInteractable, ITrackableEvent
 
     public void Interact()
     {
-        //track the interaction
         TrackEvent();
-    }
-
-    public void TrackEvent()
-    {
-        PlayerTracker.Instance.EventTracker.TrackEvent(this);
     }
 }

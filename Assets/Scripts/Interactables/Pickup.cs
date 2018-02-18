@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.Trackers;
 
-public class Pickup : MonoBehaviour, IInteractable, ITrackableEvent {
-
-    public ObjectTraits Traits { get; set; }
+public class Pickup : TrackableEventObject, IInteractable {
+    
     Renderer pickupRenderer;
     
     void Start()
@@ -14,10 +14,5 @@ public class Pickup : MonoBehaviour, IInteractable, ITrackableEvent {
     public void Interact()
     {
         TrackEvent();
-    }
-
-    public void TrackEvent()
-    {
-        PlayerTracker.Instance.EventTracker.TrackEvent(this);
     }
 }
