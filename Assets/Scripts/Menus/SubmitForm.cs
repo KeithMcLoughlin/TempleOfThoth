@@ -29,7 +29,8 @@ public class SubmitForm : MonoBehaviour {
 
         var userDetails = new UserDetails(userGender, userAgeRange, userNationality);
 
-        PlayerData.Instance.InsertNewUserToDatabase(userDetails);
+        //commented out temporarily to prevent inserting to db
+        //PlayerData.Instance.InsertNewUserToDatabase(userDetails);
         SceneManager.LoadScene("TestLevel");
     }
 }
