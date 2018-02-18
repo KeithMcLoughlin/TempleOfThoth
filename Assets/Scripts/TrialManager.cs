@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.Data;
 
 public class TrialManager : MonoBehaviour
 {
@@ -25,6 +26,9 @@ public class TrialManager : MonoBehaviour
         //IntialiseRoom(beginningRoomScript, effectiveTraits, ineffectiveTraits);
         var beginningRoomScript = GetComponent<BeginningRoom>();
         var room = beginningRoomScript.Intialise(new Vector3(200, 0, 0), effectiveTraits, ineffectiveTraits);
+
+        //set trial document generator
+        PlayerData.Instance.DocumentGeneratorForCurrentTrial = new BeginingRoomDocumentGenerator();
 
         PlayerController.Instance.transform.position = room.transform.Find("StartPoint").position;
     }

@@ -10,6 +10,7 @@ public class PlayerData : MonoBehaviour
 {
     public static PlayerData Instance { get; private set; }
     public BsonValue CurrentUserID;
+    public ITrialDocumentGenerator DocumentGeneratorForCurrentTrial;
     List<Color> UsableColours = new List<Color> { Color.yellow, Color.red, Color.green, Color.blue, Color.black, Color.cyan, Color.magenta, Color.grey };
 
     void Awake()
@@ -37,5 +38,19 @@ public class PlayerData : MonoBehaviour
     public void UpdateData(ObjectTraits traits)
     {
         Debug.Log("Player Data updated color: " + traits.Colour + ". ");
+        //temp insert of data to db. todo: logic to know when sufficient data is recieved + trial has ended
+        InsertUserTrialData(traits);
+    }
+
+    public void InsertUserTrialData(ObjectTraits traitsToInsert)
+    {
+        var document = DocumentGeneratorForCurrentTrial.GenerateDocument(traitsToInsert, CurrentUserID);
+
+        MongoClient client = new MongoClient("mongodb://kmcl:12081995@ds119988.mlab.com:19988/templeofthothstats");
+        MongoServer server = client.GetServer();
+        MongoDatabase db = server.GetDatabase("templeofthothstats");
+        MongoCollection<BsonDocument> trialCollection = db.GetCollection<BsonDocument>("Trials");
+
+        trialCollection.Insert(document);
     }
 }
