@@ -9,13 +9,12 @@ namespace Assets.Scripts.Trackers
     public class VisualTracker : MonoBehaviour, IVisualTracker
     {
         public float maxTrackableObjectDistance = 2.5f;
+        public Dictionary<TrackableEventObject, float> trackableObjectsLookedAt = new Dictionary<TrackableEventObject, float>();
 
         Ray visualTrackerRay;
         RaycastHit trackableObjectPlayerIsLookingAt;
         int trackableObjectLayer;
         Camera playersVision;
-
-        Dictionary<TrackableEventObject, float> trackableObjectsLookedAt = new Dictionary<TrackableEventObject, float>();
 
         void Start()
         {
@@ -40,6 +39,11 @@ namespace Assets.Scripts.Trackers
                 {
                     Debug.Log("Object already seen for " + trackableObjectsLookedAt[trackableObject] + " seconds");
                     trackableObjectsLookedAt[trackableObject] += Time.deltaTime;
+                    if(trackableObjectsLookedAt[trackableObject] > 10)
+                    {
+                        SaveData();
+                        ResetData();
+                    }
                 }
                 else
                 {
@@ -49,6 +53,15 @@ namespace Assets.Scripts.Trackers
             }
         }
 
-        
+        void ResetData()
+        {
+            trackableObjectsLookedAt.Clear();
+        }
+
+        void SaveData()
+        {
+            //temp solution for inserting data
+            PlayerData.Instance.InsertUserTrialVisualData("Beginning Room", trackableObjectsLookedAt);
+        }
     }
 }

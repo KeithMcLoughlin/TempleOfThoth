@@ -5,6 +5,7 @@ using UnityEngine;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using Assets.Scripts.Data;
+using Assets.Scripts.Trackers;
 
 public class PlayerData : MonoBehaviour
 {
@@ -52,5 +53,19 @@ public class PlayerData : MonoBehaviour
         MongoCollection<BsonDocument> trialCollection = db.GetCollection<BsonDocument>("Trials");
 
         trialCollection.Insert(document);
+    }
+
+    public void InsertUserTrialVisualData(string trial, Dictionary<TrackableEventObject, float> objectsLookedAt)
+    {
+        var documentGenerator = new VisualTrackerDocumentGenerator();
+        var document = documentGenerator.GenerateDocument(trial, objectsLookedAt);
+        
+        MongoClient client = new MongoClient("mongodb://kmcl:12081995@ds119988.mlab.com:19988/templeofthothstats");
+        MongoServer server = client.GetServer();
+        MongoDatabase db = server.GetDatabase("templeofthothstats");
+        MongoCollection<BsonDocument> visualDataCollection = db.GetCollection<BsonDocument>("VisualData");
+
+        visualDataCollection.Insert(document);
+        Debug.Log("Insert Visual Data to DB");
     }
 }
