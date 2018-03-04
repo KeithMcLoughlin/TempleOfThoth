@@ -15,6 +15,8 @@ namespace Assets.Scripts.Trackers
         int trackableObjectLayer;
         Camera playersVision;
 
+        Dictionary<TrackableEventObject, float> trackableObjectsLookedAt = new Dictionary<TrackableEventObject, float>();
+
         void Start()
         {
             playersVision = GetComponent<Camera>();
@@ -30,10 +32,23 @@ namespace Assets.Scripts.Trackers
             //if player is looking at a trackable object
             if (Physics.Raycast(visualTrackerRay, out trackableObjectPlayerIsLookingAt, maxTrackableObjectDistance, trackableObjectLayer))
             {
-                var trackableObjectScript = trackableObjectPlayerIsLookingAt.collider.GetComponent<TrackableEventObject>();
-                var traits = trackableObjectScript.Traits;
-                Debug.Log("Looking at \"" + trackableObjectScript.name + "\" of colour " + traits.Colour);
+                var trackableObject = trackableObjectPlayerIsLookingAt.collider.GetComponent<TrackableEventObject>();
+                var traits = trackableObject.Traits;
+                Debug.Log("Looking at \"" + trackableObject.name + "\" of colour " + traits.Colour);
+                
+                if(trackableObjectsLookedAt.ContainsKey(trackableObject))
+                {
+                    Debug.Log("Object already seen for " + trackableObjectsLookedAt[trackableObject] + " seconds");
+                    trackableObjectsLookedAt[trackableObject] += Time.deltaTime;
+                }
+                else
+                {
+                    Debug.Log("Newly seen object");
+                    trackableObjectsLookedAt.Add(trackableObject, 0.0f);
+                }
             }
         }
+
+        
     }
 }
