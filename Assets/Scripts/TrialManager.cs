@@ -6,6 +6,7 @@ using Assets.Scripts.Data;
 public class TrialManager : MonoBehaviour
 {
     public static TrialManager Instance { get; private set; }
+    BeginningRoom beginningRoom;
 
     void Awake()
     {
@@ -24,8 +25,8 @@ public class TrialManager : MonoBehaviour
         Debug.Log("Querying Logic Agent");
         LogicAgent.Instance.CalculatePlayerPreferrences(out effectiveTraits, out ineffectiveTraits);
         //IntialiseRoom(beginningRoomScript, effectiveTraits, ineffectiveTraits);
-        var beginningRoomScript = GetComponent<BeginningRoom>();
-        var room = beginningRoomScript.Intialise(new Vector3(200, 0, 0), effectiveTraits, ineffectiveTraits);
+        beginningRoom = GetComponent<BeginningRoom>();
+        var room = beginningRoom.Intialise(new Vector3(0, 0, 0), effectiveTraits, ineffectiveTraits);
 
         //set trial document generator
         PlayerData.Instance.DocumentGeneratorForCurrentTrial = new BeginingRoomDocumentGenerator();
@@ -35,6 +36,10 @@ public class TrialManager : MonoBehaviour
 	
 	void Update ()
     {
-		
+		if(beginningRoom.completed)
+        {
+            Instantiate(Resources.Load("50_50 Decision"), beginningRoom.nextTrialPosition);
+            beginningRoom.completed = false;
+        }
 	}
 }

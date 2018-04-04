@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts;
 
 public class BeginningRoom : MonoBehaviour, ITrialRoom {
 
@@ -9,6 +10,9 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
     string goalDirection;
     Color discouragedColour;
     string discouragedDirection;
+    List<Door> beginningFrontDoors = new List<Door>();
+    public bool completed = false;
+    public Transform nextTrialPosition;
 
     List<Color> UsableColours = new List<Color> { Color.yellow, Color.red, Color.green, Color.blue, Color.black, Color.cyan, Color.magenta, Color.grey };
     Color GetRandomColour(IList<Color> selectableColours)
@@ -80,6 +84,17 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
             SetColourForCorridorDoors(randomColour, doorwayCorridor);
             UsableColours.Remove(randomColour);
         }
+
+        //subscribe to door trigger event so we know when to create next trial + add reference to list
+        //so we can lock the doors when necessary
+        /*var frontDoorway = doorwayCorridor.Find("FrontDoorway");
+        var frontDoor = frontDoorway.Find("Door");
+        beginningFrontDoors.Add(frontDoor.GetComponent<Door>());
+        var doorscript = frontDoor.GetComponent<Door>();
+        doorscript.OnDoorTriggered += TrialCompleted;*/
+        
+        var corridorScript = doorwayCorridor.GetComponent<Corridor>();
+        corridorScript.OnCorridorEntered += TrialCompleted;
     }
 
     void SetColourForCorridorDoors(Color colourToSet, Transform corridor)
@@ -112,5 +127,17 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
             case Direction.Straight: { discouragedDirection = "FrontWall"; break; }
             case Direction.Behind: { discouragedDirection = "BackWall"; break; }
         }
+    }
+
+    void TrialCompleted(object sender)
+    {
+        Corridor corridor = sender as Corridor;
+
+        completed = true;
+        Debug.Log("begginging room completed");
+
+        //get front door + lock it and backdoor position for new trial
+        corridor.front.locked = true;
+        nextTrialPosition = corridor.nextTrialPosition;
     }
 }

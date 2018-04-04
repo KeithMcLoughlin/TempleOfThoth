@@ -33,11 +33,11 @@ namespace Assets.Scripts.Trackers
             {
                 var trackableObject = trackableObjectPlayerIsLookingAt.collider.GetComponent<TrackableEventObject>();
                 var traits = trackableObject.Traits;
-                Debug.Log("Looking at \"" + trackableObject.name + "\" of colour " + traits.Colour);
+                //Debug.Log("Looking at \"" + trackableObject.name + "\" of colour " + traits.Colour);
                 
                 if(trackableObjectsLookedAt.ContainsKey(trackableObject))
                 {
-                    Debug.Log("Object already seen for " + trackableObjectsLookedAt[trackableObject] + " seconds");
+                    //Debug.Log("Object already seen for " + trackableObjectsLookedAt[trackableObject] + " seconds");
                     trackableObjectsLookedAt[trackableObject] += Time.deltaTime;
                     if(trackableObjectsLookedAt[trackableObject] > 10)
                     {
@@ -47,7 +47,7 @@ namespace Assets.Scripts.Trackers
                 }
                 else
                 {
-                    Debug.Log("Newly seen object");
+                    //Debug.Log("Newly seen object");
                     trackableObjectsLookedAt.Add(trackableObject, 0.0f);
                 }
             }
