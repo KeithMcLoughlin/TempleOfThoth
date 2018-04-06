@@ -21,12 +21,12 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
     }
 
     //return the created room
-    public GameObject Intialise(Vector3 position, ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits)
+    public GameObject Intialise(Transform position, ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits)
     {
         //Instantiate a prefab through code in C#. - Unity Answers [Internet]. [cited 2017 Nov 15]. 
         //Available from: https://answers.unity.com/questions/12003/instantiate-a-prefab-through-code-in-c.html
         //instantiate on instance of this rooms prefab from the resources folder
-        Room = Instantiate(Resources.Load("BeginningRoomTemplate"), position, new Quaternion()) as GameObject;
+        Room = Instantiate(Resources.Load("BeginningRoomTemplate"), position) as GameObject;
 
         SetGoalPathAndDiscouragedPath(effectiveTraits, ineffectiveTraits);
         UsableColours.Remove(goalColour);

@@ -7,6 +7,7 @@ public class TrialManager : MonoBehaviour
 {
     public static TrialManager Instance { get; private set; }
     BeginningRoom beginningRoom;
+    SplitDecisionTrialRoom splitDecisionTrialRoom;
 
     void Awake()
     {
@@ -20,13 +21,15 @@ public class TrialManager : MonoBehaviour
 
     void Start ()
     {
-        ObjectTraits effectiveTraits;
-        ObjectTraits ineffectiveTraits;
         Debug.Log("Querying Logic Agent");
-        LogicAgent.Instance.CalculatePlayerPreferrences(out effectiveTraits, out ineffectiveTraits);
-        //IntialiseRoom(beginningRoomScript, effectiveTraits, ineffectiveTraits);
+        LogicAgent.Instance.CalculatePlayerPreferrences(out predicatedBestTraits, out predicatedWorstTraits);
+        
+        //Initialise Trial room scripts
         beginningRoom = GetComponent<BeginningRoom>();
-        var room = beginningRoom.Intialise(new Vector3(0, 0, 0), effectiveTraits, ineffectiveTraits);
+        splitDecisionTrialRoom = GetComponent<SplitDecisionTrialRoom>();
+        
+        //setup beginning room
+        var room = IntialiseRoom(beginningRoom, this.transform, predicatedBestTraits, predicatedWorstTraits);
 
         //set trial document generator
         PlayerData.Instance.DocumentGeneratorForCurrentTrial = new BeginingRoomDocumentGenerator();
@@ -38,8 +41,14 @@ public class TrialManager : MonoBehaviour
     {
 		if(beginningRoom.completed)
         {
-            Instantiate(Resources.Load("50_50 Decision"), beginningRoom.nextTrialPosition);
+            LogicAgent.Instance.CalculatePlayerPreferrences(out predicatedBestTraits, out predicatedWorstTraits);
+            IntialiseRoom(splitDecisionTrialRoom, beginningRoom.nextTrialPosition, predicatedBestTraits, predicatedWorstTraits);
             beginningRoom.completed = false;
         }
 	}
+
+    GameObject IntialiseRoom(ITrialRoom room, Transform position, ObjectTraits effectiveTriats, ObjectTraits ineffectiveTriats)
+    {
+        return room.Intialise(position, predicatedBestTraits, predicatedWorstTraits);
+    }
 }
