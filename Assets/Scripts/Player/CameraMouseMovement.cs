@@ -9,6 +9,7 @@ public class CameraMouseMovement : MonoBehaviour {
     public float smoothing = 2f;
     public float maxVerticalRotation = 90f; //in degrees
     public float interactDistance = 2.5f;
+    public float showIfLockedDistance = 15f;
     public GameObject playerCursor;
 
     Vector2 lookingPosition;
@@ -19,6 +20,8 @@ public class CameraMouseMovement : MonoBehaviour {
     RaycastHit interactable;
     int interactableLayer;
     Image playerCursorImage;
+    public Sprite lockImage;
+    public Sprite normalPlayerCursor;
     
 	void Start ()
     {
@@ -69,6 +72,22 @@ public class CameraMouseMovement : MonoBehaviour {
         {
             //if not close to an interactable, keep cursor as red
             playerCursorImage.color = Color.red;
+        }
+
+        //check if the player is looking at a locked door
+        RaycastHit door;
+        if (Physics.Raycast(interactIndicator, out door, showIfLockedDistance) && door.transform.GetComponent<Door>() != null
+            && door.transform.GetComponent<Door>().locked)
+        {
+            //check cursor to lock to indictate that the door is locked
+            playerCursorImage.sprite = lockImage;
+            playerCursorImage.transform.localScale = new Vector3(3, 3, 0);
+        }
+        else
+        {
+            //return it to normal if it isn't
+            playerCursorImage.sprite = normalPlayerCursor;
+            playerCursorImage.transform.localScale = new Vector3(1, 1, 0);
         }
     }
 }

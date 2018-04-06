@@ -509,6 +509,37 @@ Prefab:
       propertyPath: m_LocalPosition.y
       value: 95.333336
       objectReference: {fileID: 0}
+    - target: {fileID: 114923003155486768, guid: 3f361c5a2965f9741b4466a35897c48c,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+    - target: {fileID: 224997412644246826, guid: 3f361c5a2965f9741b4466a35897c48c,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 224997412644246826, guid: 3f361c5a2965f9741b4466a35897c48c,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114975573376029524, guid: 3f361c5a2965f9741b4466a35897c48c,
+        type: 2}
+      propertyPath: lockImage
+      value: 
+      objectReference: {fileID: 21300000, guid: 35470c1317ab96d48881eb327b95c707,
+        type: 3}
+    - target: {fileID: 114975573376029524, guid: 3f361c5a2965f9741b4466a35897c48c,
+        type: 2}
+      propertyPath: normalPlayerCursor
+      value: 
+      objectReference: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+    - target: {fileID: 114975573376029524, guid: 3f361c5a2965f9741b4466a35897c48c,
+        type: 2}
+      propertyPath: showIfLockedDistance
+      value: 15
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114947340490855926, guid: 3f361c5a2965f9741b4466a35897c48c, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 3f361c5a2965f9741b4466a35897c48c, type: 2}
