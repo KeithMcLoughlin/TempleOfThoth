@@ -87,12 +87,6 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
 
         //subscribe to door trigger event so we know when to create next trial + add reference to list
         //so we can lock the doors when necessary
-        /*var frontDoorway = doorwayCorridor.Find("FrontDoorway");
-        var frontDoor = frontDoorway.Find("Door");
-        beginningFrontDoors.Add(frontDoor.GetComponent<Door>());
-        var doorscript = frontDoor.GetComponent<Door>();
-        doorscript.OnDoorTriggered += TrialCompleted;*/
-        
         var corridorScript = doorwayCorridor.GetComponent<Corridor>();
         corridorScript.OnCorridorEntered += TrialCompleted;
     }

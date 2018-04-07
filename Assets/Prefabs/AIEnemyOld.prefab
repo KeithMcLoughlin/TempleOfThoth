@@ -27,7 +27,7 @@ GameObject:
   - component: {fileID: 195235699259303418}
   - component: {fileID: 114553632084449832}
   m_Layer: 0
-  m_Name: AIEnemy
+  m_Name: AIEnemyOld
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
