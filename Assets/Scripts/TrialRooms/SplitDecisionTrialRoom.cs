@@ -5,6 +5,7 @@ using Assets.Scripts;
 
 public class SplitDecisionTrialRoom : MonoBehaviour, ITrialRoom {
 
+    public int totalNumbeerOfDecisions = 2;
     GameObject Room;
 
     public GameObject Intialise(Transform position, ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits)
@@ -35,13 +36,17 @@ public class SplitDecisionTrialRoom : MonoBehaviour, ITrialRoom {
 
     void SetupDeadEndCorridor(Transform corridor)
     {
+        //enable dead end wall
         var deadendWall = corridor.Find("DeadEndWall");
         deadendWall.gameObject.SetActive(true);
         //spawn statue at ai position
+        var statuePosition = corridor.Find("StatuePosition");
+        Instantiate(Resources.Load("AIEnemy"), statuePosition);
     }
 
     void SetupProgressCorridor(Transform corridor)
     {
+        //create next 50 50 trial corridor extended from the progression corridor
         var corridorPosition = corridor.Find("Progress Position");
         Instantiate(Resources.Load("50_50 Decision"), corridorPosition);
     }
