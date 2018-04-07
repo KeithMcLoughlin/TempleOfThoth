@@ -102,7 +102,7 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
         //set the colour for the front door
         var frontDoorway = corridor.Find("FrontDoorway");
         frontDoorway.Find("Door").GetComponent<Renderer>().material.SetColor("_Color", colourToSet);
-
+        
         //set the colour for the back door
         var backDoorway = corridor.Find("BackDoorway");
         backDoorway.Find("Door").GetComponent<Renderer>().material.SetColor("_Color", colourToSet);
