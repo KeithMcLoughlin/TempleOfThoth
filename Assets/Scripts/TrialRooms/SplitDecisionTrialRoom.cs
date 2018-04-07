@@ -44,10 +44,12 @@ public class SplitDecisionTrialRoom : MonoBehaviour, ITrialRoom {
     void ColourCorridor(Transform corridor, Color colour)
     {
         List<Transform> sections = new List<Transform>();
+        //the three sections of the corridor to be coloured
         sections.Add(corridor.Find("First Part"));
         sections.Add(corridor.Find("Second Part"));
         sections.Add(corridor.Find("Intersection"));
 
+        //loop through each sections parts and colour them
         foreach (var section in sections)
         {
             section.Find("Floor").GetComponent<Renderer>().material.SetColor("_Color", colour);
@@ -56,6 +58,7 @@ public class SplitDecisionTrialRoom : MonoBehaviour, ITrialRoom {
             section.Find("Roof").GetComponent<Renderer>().material.SetColor("_Color", colour);
         }
 
+        //colour the deadend wall
         corridor.Find("DeadEndWall").GetComponent<Renderer>().material.SetColor("_Color", colour);
     }
 
@@ -63,6 +66,8 @@ public class SplitDecisionTrialRoom : MonoBehaviour, ITrialRoom {
     {
         Transform deadendCorridor;
         Transform progressCorridor;
+        //determine which side will be the deadend and which side will be the progression corridor based 
+        //on what is predicted to lure the player to go down the deadend corridor
         if (effectiveTraits.Direction == Direction.Left)
         {
             deadendCorridor = corridor.transform.Find("Right Angle Corridor (Left Side)");
@@ -78,21 +83,25 @@ public class SplitDecisionTrialRoom : MonoBehaviour, ITrialRoom {
             progressionDirection = Direction.Left;
         }
 
+        //setup the deadend and progression corridors
         SetupDeadEndCorridor(deadendCorridor);
+        //provide the end goal if its the last decision the player needs to make or else continue building the trial
         if(lastDecision)
             SetupProgressCorridor(progressCorridor, "GoalDoorwayCorridor");
         else
             SetupProgressCorridor(progressCorridor, "50_50 Decision");
         
-
+        //colour the corridor based on the predicted traits
         ColourCorridor(deadendCorridor, effectiveTraits.Colour);
         ColourCorridor(progressCorridor, ineffectiveTraits.Colour);
 
+        //subscribe the next decision step to the triggers in the corridor
         var deadendCorridorScript = CurrentDeadEndCorridor.GetComponent<SplitDecisionCorridor>();
         deadendCorridorScript.OnCorridorChosen += NextDecision;
         var progressCorridorScript = CurrentProgressionCorridor.GetComponent<SplitDecisionCorridor>();
         progressCorridorScript.OnCorridorChosen += NextDecision;
 
+        //setup the traits for the newly created corridors
         deadendCorridorScript.Traits = new ObjectTraits(effectiveTraits.Colour, deadendDirection, Size.Medium);
         progressCorridorScript.Traits = new ObjectTraits(ineffectiveTraits.Colour, progressionDirection, Size.Medium);
     }
@@ -104,10 +113,12 @@ public class SplitDecisionTrialRoom : MonoBehaviour, ITrialRoom {
         CurrentProgressionCorridor.GetComponent<BoxCollider>().enabled = false;
 
         numberOfChoicesMade++;
+        //bool to determine if we should build the end goal
         var isLastDecision = numberOfChoicesMade >= totalNumberOfDecisions;
 
         ObjectTraits predictedBestTraits;
         ObjectTraits predictedWorstTraits;
+        //query logic agent to get next set of predictions and setup next decision to be made
         LogicAgent.Instance.CalculatePlayerPreferrences(out predictedBestTraits, out predictedWorstTraits);
         SetupDecision(NextDecisionCorridor, predictedBestTraits, predictedWorstTraits, isLastDecision);
     }
