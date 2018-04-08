@@ -62,6 +62,34 @@ public class SplitDecisionTrialRoom : MonoBehaviour, ITrialRoom {
         corridor.Find("DeadEndWall").GetComponent<Renderer>().material.SetColor("_Color", colour);
     }
 
+    void SetupLighting(Transform corridor, Lighting lighting)
+    {
+        /*var lights = new List<Light>
+        {
+            corridor.Find("Point light").GetComponent<Light>(),
+            corridor.Find("Point light (1)").GetComponent<Light>(),
+            corridor.Find("Point light (2)").GetComponent<Light>(),
+            corridor.Find("Point light (3)").GetComponent<Light>()
+        };*/
+
+        float lightIntensity = 0.0f;
+        switch(lighting)
+        {
+            case Lighting.None: { lightIntensity = 0; break; }
+            case Lighting.Dim: { lightIntensity = 1; break; }
+            case Lighting.Normal: { lightIntensity = 2; break; }
+            case Lighting.Bright: { lightIntensity = 3; break; }
+        }
+
+        corridor.Find("Spotlight").GetComponent<Light>().intensity = lightIntensity;
+        /*
+        foreach(var light in lights)
+        {
+            light.intensity = lightIntensity;
+        }
+        */
+    }
+
     void SetupDecision(GameObject corridor, ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits, bool lastDecision)
     {
         Transform deadendCorridor;
@@ -95,6 +123,10 @@ public class SplitDecisionTrialRoom : MonoBehaviour, ITrialRoom {
         ColourCorridor(deadendCorridor, effectiveTraits.Colour);
         ColourCorridor(progressCorridor, ineffectiveTraits.Colour);
 
+        //light up the corridors based on the predicted traits
+        SetupLighting(deadendCorridor, effectiveTraits.Lighting);
+        SetupLighting(progressCorridor, ineffectiveTraits.Lighting);
+
         //subscribe the next decision step to the triggers in the corridor
         var deadendCorridorScript = CurrentDeadEndCorridor.GetComponent<SplitDecisionCorridor>();
         deadendCorridorScript.OnCorridorChosen += NextDecision;
@@ -102,8 +134,8 @@ public class SplitDecisionTrialRoom : MonoBehaviour, ITrialRoom {
         progressCorridorScript.OnCorridorChosen += NextDecision;
 
         //setup the traits for the newly created corridors
-        deadendCorridorScript.Traits = new ObjectTraits(effectiveTraits.Colour, deadendDirection, Lighting.Normal);
-        progressCorridorScript.Traits = new ObjectTraits(ineffectiveTraits.Colour, progressionDirection, Lighting.Normal);
+        deadendCorridorScript.Traits = new ObjectTraits(effectiveTraits.Colour, deadendDirection, effectiveTraits.Lighting);
+        progressCorridorScript.Traits = new ObjectTraits(ineffectiveTraits.Colour, progressionDirection, ineffectiveTraits.Lighting);
     }
 
     void NextDecision()
