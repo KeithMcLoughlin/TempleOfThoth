@@ -3,13 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts;
 
-public class BeginningRoom : MonoBehaviour, ITrialRoom {
+public class BeginningRoom : MonoBehaviour {
 
     GameObject Room;
-    Color goalColour;
-    string goalDirection;
-    Color discouragedColour;
-    string discouragedDirection;
     List<Door> beginningFrontDoors = new List<Door>();
     public bool completed = false;
     public Transform nextTrialPosition;
@@ -21,24 +17,19 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
     }
 
     //return the created room
-    public GameObject Intialise(Transform position, ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits)
+    public GameObject Intialise(Transform position)
     {
         //Instantiate a prefab through code in C#. - Unity Answers [Internet]. [cited 2017 Nov 15]. 
         //Available from: https://answers.unity.com/questions/12003/instantiate-a-prefab-through-code-in-c.html
         //instantiate on instance of this rooms prefab from the resources folder
         Room = Instantiate(Resources.Load("BeginningRoomTemplate"), position) as GameObject;
 
-        SetGoalPathAndDiscouragedPath(effectiveTraits, ineffectiveTraits);
-        UsableColours.Remove(goalColour);
-        UsableColours.Remove(discouragedColour);
-
         SetupDoorway("BackWall");
         SetupDoorway("FrontWall");
         SetupDoorway("LeftWall");
         SetupDoorway("RightWall");
 
-        Debug.Log("Room Intialised");
-        
+        Debug.Log("BeginningRoom Intialised");
         return Room;
     }
 
@@ -66,24 +57,12 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
         rightWall.localPosition = new Vector3(rightWall.localPosition.x, rightWall.localPosition.y, rightWall.localPosition.z + (rightWallToCorridor / 2));
         //fix the scale to fill the right side
         rightWall.localScale = new Vector3(rightWall.localScale.x, rightWall.localScale.y, rightWallToCorridor);
-
-        //set the predicted corridor the player will choose to the goal colour
-        if(Wall.Equals(goalDirection))
-        {
-            Debug.Log("Setting up goal path which is: " + goalDirection + " with the colour " + goalColour);
-            SetColourForCorridorDoors(goalColour, doorwayCorridor);
-        }
-        else if(Wall.Equals(discouragedDirection))
-        {
-            Debug.Log("Setting up discouraged path which is: " + discouragedDirection + " with the colour " + discouragedColour);
-            SetColourForCorridorDoors(discouragedColour, doorwayCorridor);
-        }
-        else
-        {
-            var randomColour = GetRandomColour(UsableColours);
-            SetColourForCorridorDoors(randomColour, doorwayCorridor);
-            UsableColours.Remove(randomColour);
-        }
+        
+        //choose a random colour and set the door of this corridor to that colour
+        var randomColour = GetRandomColour(UsableColours);
+        SetColourForCorridorDoors(randomColour, doorwayCorridor);
+        //remove it from list so there is no duplicate choses
+        UsableColours.Remove(randomColour);
 
         //subscribe to door trigger event so we know when to create next trial + add reference to list
         //so we can lock the doors when necessary
@@ -102,27 +81,6 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
         backDoorway.Find("Door").GetComponent<Renderer>().material.SetColor("_Color", colourToSet);
     }
 
-    void SetGoalPathAndDiscouragedPath(ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits)
-    {
-        goalColour = effectiveTraits.Colour;
-        switch(effectiveTraits.Direction)
-        {
-            case Direction.Left: { goalDirection = "LeftWall"; break; }
-            case Direction.Right: { goalDirection = "RightWall"; break; }
-            case Direction.Straight: { goalDirection = "FrontWall"; break; }
-            case Direction.Behind: { goalDirection = "BackWall"; break; }
-        }
-
-        discouragedColour = ineffectiveTraits.Colour;
-        switch (ineffectiveTraits.Direction)
-        {
-            case Direction.Left: { discouragedDirection = "LeftWall"; break; }
-            case Direction.Right: { discouragedDirection = "RightWall"; break; }
-            case Direction.Straight: { discouragedDirection = "FrontWall"; break; }
-            case Direction.Behind: { discouragedDirection = "BackWall"; break; }
-        }
-    }
-
     void TrialCompleted(object sender)
     {
         Corridor corridor = sender as Corridor;
@@ -133,5 +91,8 @@ public class BeginningRoom : MonoBehaviour, ITrialRoom {
         //get front door + lock it and backdoor position for new trial
         corridor.front.locked = true;
         nextTrialPosition = corridor.nextTrialPosition;
+
+        //disable trigger in corridor so that the player cant trigger it multiple times
+        corridor.transform.GetComponent<BoxCollider>().enabled = false;
     }
 }
