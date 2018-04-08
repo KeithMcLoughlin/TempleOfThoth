@@ -23,10 +23,5 @@ namespace Assets.Scripts.Triggerables
                 OnCorridorChosen();
             }
         }
-
-        public void SetTraits(ObjectTraits traits)
-        {
-            Traits = traits;
-        }
     }
 }

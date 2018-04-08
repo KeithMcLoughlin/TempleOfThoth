@@ -102,8 +102,8 @@ public class SplitDecisionTrialRoom : MonoBehaviour, ITrialRoom {
         progressCorridorScript.OnCorridorChosen += NextDecision;
 
         //setup the traits for the newly created corridors
-        deadendCorridorScript.Traits = new ObjectTraits(effectiveTraits.Colour, deadendDirection, Size.Medium);
-        progressCorridorScript.Traits = new ObjectTraits(ineffectiveTraits.Colour, progressionDirection, Size.Medium);
+        deadendCorridorScript.Traits = new ObjectTraits(effectiveTraits.Colour, deadendDirection, Lighting.Normal);
+        progressCorridorScript.Traits = new ObjectTraits(ineffectiveTraits.Colour, progressionDirection, Lighting.Normal);
     }
 
     void NextDecision()

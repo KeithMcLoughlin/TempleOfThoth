@@ -10,7 +10,7 @@ public class Button : TrackableEventObject, IInteractable
     
     void Start ()
     {
-        Traits = new ObjectTraits(Color.red, Direction.Right, Size.Medium);
+        Traits = new ObjectTraits(Color.red, Direction.Right, Lighting.Normal);
         buttonRenderer = GetComponent<Renderer>();
         buttonRenderer.material.SetColor("_Color", Traits.Colour);
     }

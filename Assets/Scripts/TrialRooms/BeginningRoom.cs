@@ -5,15 +5,22 @@ using Assets.Scripts;
 
 public class BeginningRoom : MonoBehaviour {
 
-    GameObject Room;
-    List<Door> beginningFrontDoors = new List<Door>();
     public bool completed = false;
     public Transform nextTrialPosition;
+
+    GameObject Room;
+    List<Door> beginningFrontDoors = new List<Door>();
 
     List<Color> UsableColours = new List<Color> { Color.yellow, Color.red, Color.green, Color.blue, Color.black, Color.cyan, Color.magenta, Color.grey };
     Color GetRandomColour(IList<Color> selectableColours)
     {
         return selectableColours[Random.Range(0, selectableColours.Count - 1)];
+    }
+
+    List<Lighting> lightingTypes = new List<Lighting> { Lighting.None, Lighting.Dim, Lighting.Normal, Lighting.Bright };
+    Lighting GetRandomLighting()
+    {
+        return lightingTypes[Random.Range(0, lightingTypes.Count - 1)];
     }
 
     //return the created room
@@ -24,16 +31,16 @@ public class BeginningRoom : MonoBehaviour {
         //instantiate on instance of this rooms prefab from the resources folder
         Room = Instantiate(Resources.Load("BeginningRoomTemplate"), position) as GameObject;
 
-        SetupDoorway("BackWall");
-        SetupDoorway("FrontWall");
-        SetupDoorway("LeftWall");
-        SetupDoorway("RightWall");
+        SetupDoorway("BackWall", Direction.Behind);
+        SetupDoorway("FrontWall", Direction.Straight);
+        SetupDoorway("LeftWall", Direction.Left);
+        SetupDoorway("RightWall", Direction.Right);
 
         Debug.Log("BeginningRoom Intialised");
         return Room;
     }
 
-    void SetupDoorway(string Wall)
+    void SetupDoorway(string Wall, Direction direction)
     {
         var wallTransform = Room.transform.Find(Wall);
         var doorwayCorridor = wallTransform.Find("DoorwayCorridor");
@@ -59,15 +66,25 @@ public class BeginningRoom : MonoBehaviour {
         rightWall.localScale = new Vector3(rightWall.localScale.x, rightWall.localScale.y, rightWallToCorridor);
         
         //choose a random colour and set the door of this corridor to that colour
-        var randomColour = GetRandomColour(UsableColours);
-        SetColourForCorridorDoors(randomColour, doorwayCorridor);
+        var doorColour = GetRandomColour(UsableColours);
+        SetColourForCorridorDoors(doorColour, doorwayCorridor);
         //remove it from list so there is no duplicate choses
-        UsableColours.Remove(randomColour);
+        UsableColours.Remove(doorColour);
+
+        //chose a random lighting intensity type to cast on the door
+        var lightingType = GetRandomLighting();
+        SetLightingOnDoor(doorwayCorridor, lightingType);
+        //remove it from list so there is no duplicate choses
+        lightingTypes.Remove(lightingType);
 
         //subscribe to door trigger event so we know when to create next trial + add reference to list
         //so we can lock the doors when necessary
         var corridorScript = doorwayCorridor.GetComponent<Corridor>();
         corridorScript.OnCorridorEntered += TrialCompleted;
+
+        var frontDoorway = doorwayCorridor.Find("FrontDoorway");
+        var doorScript = frontDoorway.Find("Door").GetComponent<Door>();
+        doorScript.Traits = new ObjectTraits(doorColour, direction, lightingType);
     }
 
     void SetColourForCorridorDoors(Color colourToSet, Transform corridor)
@@ -79,6 +96,20 @@ public class BeginningRoom : MonoBehaviour {
         //set the colour for the back door
         var backDoorway = corridor.Find("BackDoorway");
         backDoorway.Find("Door").GetComponent<Renderer>().material.SetColor("_Color", colourToSet);
+    }
+
+    void SetLightingOnDoor(Transform corridor, Lighting lighting)
+    {
+        var lightsource = corridor.Find("Spotlight");
+        var light = lightsource.GetComponent<Light>();
+
+        switch(lighting)
+        {
+            case Lighting.None: { light.intensity = 0; break; }
+            case Lighting.Dim: { light.intensity = 20; break; }
+            case Lighting.Normal: { light.intensity = 50; break; }
+            case Lighting.Bright: { light.intensity = 80; break; }
+        }
     }
 
     void TrialCompleted(object sender)

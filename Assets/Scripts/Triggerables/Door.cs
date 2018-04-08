@@ -21,10 +21,6 @@ public class Door : TrackableEventObject {
     
 	void Start ()
     {
-        var renderer = GetComponent<Renderer>();
-        var doorColour = renderer.material.GetColor("_Color");
-        Traits = new ObjectTraits(doorColour, Direction.Left, Size.Medium);
-
         //close position is where the door start and the open position is the doors height up on the y axis
         openPosition = new Vector3(transform.position.x, transform.position.y + transform.localScale.y, transform.position.z);
         closePosition = transform.position;

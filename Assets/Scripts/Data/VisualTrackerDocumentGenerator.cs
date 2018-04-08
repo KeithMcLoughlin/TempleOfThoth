@@ -19,7 +19,7 @@ namespace Assets.Scripts.Data
                     {"Object Type", trackableObject.name },
                     {"Color", trackableObject.Traits.Colour.ToString() },
                     {"Direction", trackableObject.Traits.Direction.ToString() },
-                    {"Size", trackableObject.Traits.Size.ToString() },
+                    {"Lighting", trackableObject.Traits.Lighting.ToString() },
                     {"Time Spent Viewing", objectsLookedAt[trackableObject] }
                 };
                 objectsLookedAtWithTraitsAndTime.Add(data);

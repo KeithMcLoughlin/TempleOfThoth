@@ -2,21 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//public enum Shape { Cylinder, Sphere, Pyramid, Cuboid, Cube }
 public enum Direction { Right, Left, Straight, Behind }
-public enum Size { Big, Medium, Small }
+public enum Lighting { None, Dim, Normal, Bright }
 
 public class ObjectTraits
 {
     public Color Colour { get; set; }
-    //public Shape Shape { get; set; }
     public Direction Direction { get; set; }
-    public Size Size { get; set; }
+    public Lighting Lighting { get; set; }
 
-    public ObjectTraits(Color colour, Direction direction, Size size)
+    public ObjectTraits(Color colour, Direction direction, Lighting lighting)
     {
         Colour = colour;
         Direction = direction;
-        Size = size;
+        Lighting = lighting;
     }
 }

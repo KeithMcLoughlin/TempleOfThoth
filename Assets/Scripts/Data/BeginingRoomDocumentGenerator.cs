@@ -17,7 +17,7 @@ namespace Assets.Scripts.Data
                 {"DoorChoice", new BsonDocument {
                     {"Color", traits.Colour.ToString() },
                     {"Direction", traits.Direction.ToString() },
-                    {"Size", traits.Size.ToString() }
+                    {"Lighting", traits.Lighting.ToString() }
                 }}
             };
 
