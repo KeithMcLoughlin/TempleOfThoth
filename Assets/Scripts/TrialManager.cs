@@ -8,6 +8,9 @@ public class TrialManager : MonoBehaviour
     public static TrialManager Instance { get; private set; }
     BeginningRoom beginningRoom;
     SplitDecisionTrialRoom splitDecisionTrialRoom;
+    public delegate void CurrentTrialCompleted();
+    public event CurrentTrialCompleted OnCurrentTrialCompleted;
+    Stack<ITrialRoom> TrialsInOrder; 
 
     void Awake()
     {
@@ -24,29 +27,36 @@ public class TrialManager : MonoBehaviour
         //Initialise Trial room scripts
         beginningRoom = GetComponent<BeginningRoom>();
         splitDecisionTrialRoom = GetComponent<SplitDecisionTrialRoom>();
-        
-        //setup beginning room
-        var room = beginningRoom.Intialise(this.transform);
 
-        //move player to start position
-        PlayerController.Instance.transform.position = room.transform.Find("StartPoint").position;
+        //setup the trials into a stack in the order they will occur
+        TrialsInOrder = new Stack<ITrialRoom>();
+        TrialsInOrder.Push(splitDecisionTrialRoom);
+
+        //intialise beginning room at the start
+        beginningRoom.Intialise(this.transform);
+        beginningRoom.OnTrialCompleted += LoadNextTrial;
 
         //set trial document generator
         PlayerData.Instance.DocumentGeneratorForCurrentTrial = new BeginingRoomDocumentGenerator();
     }
-	
-	void Update ()
-    {
-		if(beginningRoom.completed)
-        {
-            LogicAgent.Instance.CalculatePlayerPreferrences(out predicatedBestTraits, out predicatedWorstTraits);
-            IntialiseTrial(splitDecisionTrialRoom, beginningRoom.nextTrialPosition, predicatedBestTraits, predicatedWorstTraits);
-            beginningRoom.completed = false;
-        }
-	}
 
-    GameObject IntialiseTrial(ITrialRoom room, Transform position, ObjectTraits effectiveTriats, ObjectTraits ineffectiveTriats)
+    void LoadNextTrial(Transform nextTrialPosition)
     {
-        return room.Intialise(position, predicatedBestTraits, predicatedWorstTraits);
+        var nextTrial = TrialsInOrder.Pop();
+        LogicAgent.Instance.CalculatePlayerPreferrences(out predicatedBestTraits, out predicatedWorstTraits);
+        nextTrial.Intialise(nextTrialPosition);
+        nextTrial.ProvideSetupInstructions(predicatedBestTraits, predicatedWorstTraits);
+        nextTrial.OnTrialCompleted += LoadNextTrial;
+        TrialCompleted();
+    }
+
+    private void TrialCompleted()
+    {
+        Debug.Log("Current Trial Completed");
+        //notify subscribers that the current trial completed
+        if (OnCurrentTrialCompleted != null)
+        {
+            OnCurrentTrialCompleted();
+        }
     }
 }

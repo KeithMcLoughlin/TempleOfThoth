@@ -7,19 +7,39 @@ using Assets.Scripts.Trackers;
 public class PlayerTracker : MonoBehaviour
 {
     public static PlayerTracker Instance { get; private set; }
-    
-    public EventTracker EventTracker;
-    public VisualTracker VisualTracker;
-    //public MovementTracker MovementTracker;
+    public IEventTracker EventTracker {
+        get
+        {
+            return eventTracker;
+        }
+    }
+    public IVisualTracker VisualTracker
+    {
+        get
+        {
+            return visualTracker;
+        }
+    }
+
+    IEventTracker eventTracker;
+    IVisualTracker visualTracker;
 
     void Awake()
     {
         Instance = this;
-        EventTracker = new EventTracker();
+        eventTracker = GetComponent<IEventTracker>();
+        visualTracker = GetComponent<IVisualTracker>();
     }
 
-    public void UpdatePlayerData(ObjectTraits traits)
+    private void Start()
     {
-        PlayerData.Instance.UpdateData(traits);
+        TrialManager.Instance.OnCurrentTrialCompleted += UpdatePlayerData;
+    }
+
+    public void UpdatePlayerData()
+    {
+        //PlayerData.Instance.UpdateData(traits);
+        //get data from both trackers + pass to player data
+        Debug.Log("Updating player data");
     }
 }

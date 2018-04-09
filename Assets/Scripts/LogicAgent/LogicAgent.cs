@@ -16,7 +16,7 @@ public class LogicAgent : MonoBehaviour
         var data = PlayerData.Instance;
         
 
-        predicatedEffectiveTraits = new ObjectTraits(Color.red, Direction.Left, Lighting.Normal);
-        predicatedIneffectiveTraits = new ObjectTraits(Color.blue, Direction.Right, Lighting.Normal);
+        predicatedEffectiveTraits = new ObjectTraits(Color.red, Direction.Left, Lighting.Bright);
+        predicatedIneffectiveTraits = new ObjectTraits(Color.blue, Direction.Right, Lighting.None);
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 using Assets.Scripts;
 using Assets.Scripts.Triggerables;
 
-public class SplitDecisionTrialRoom : MonoBehaviour, ITrialRoom {
+public class SplitDecisionTrialRoom : ITrialRoom {
 
     public int totalNumberOfDecisions = 3;
     int numberOfChoicesMade = 0;
@@ -15,11 +15,14 @@ public class SplitDecisionTrialRoom : MonoBehaviour, ITrialRoom {
     Direction deadendDirection;
     Direction progressionDirection;
 
-    public GameObject Intialise(Transform position, ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits)
+    override public void Intialise(Transform position)
     {
         Room = Instantiate(Resources.Load("50_50 Decision"), position) as GameObject;
+    }
+
+    public override void ProvideSetupInstructions(ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits)
+    {
         SetupDecision(Room, effectiveTraits, ineffectiveTraits, false);
-        return Room;
     }
 
     void SetupDeadEndCorridor(Transform corridor)
@@ -64,14 +67,6 @@ public class SplitDecisionTrialRoom : MonoBehaviour, ITrialRoom {
 
     void SetupLighting(Transform corridor, Lighting lighting)
     {
-        /*var lights = new List<Light>
-        {
-            corridor.Find("Point light").GetComponent<Light>(),
-            corridor.Find("Point light (1)").GetComponent<Light>(),
-            corridor.Find("Point light (2)").GetComponent<Light>(),
-            corridor.Find("Point light (3)").GetComponent<Light>()
-        };*/
-
         float lightIntensity = 0.0f;
         switch(lighting)
         {
@@ -82,12 +77,6 @@ public class SplitDecisionTrialRoom : MonoBehaviour, ITrialRoom {
         }
 
         corridor.Find("Spotlight").GetComponent<Light>().intensity = lightIntensity;
-        /*
-        foreach(var light in lights)
-        {
-            light.intensity = lightIntensity;
-        }
-        */
     }
 
     void SetupDecision(GameObject corridor, ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits, bool lastDecision)

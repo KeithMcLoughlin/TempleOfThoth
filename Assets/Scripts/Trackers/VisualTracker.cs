@@ -6,10 +6,9 @@ using UnityEngine;
 
 namespace Assets.Scripts.Trackers
 {
-    public class VisualTracker : MonoBehaviour, IVisualTracker
+    public class VisualTracker : IVisualTracker
     {
         public float maxTrackableObjectDistance = 2.5f;
-        public Dictionary<TrackableEventObject, float> trackableObjectsLookedAt = new Dictionary<TrackableEventObject, float>();
 
         Ray visualTrackerRay;
         RaycastHit trackableObjectPlayerIsLookingAt;
@@ -18,15 +17,15 @@ namespace Assets.Scripts.Trackers
 
         void Start()
         {
-            playersVision = GetComponent<Camera>();
+            playersVision = PlayerController.Instance.transform.Find("Main Camera").GetComponent<Camera>();
             trackableObjectLayer = LayerMask.GetMask("TrackableObject");
         }
 
         void Update()
         {
             //setup the ray for determining what the player is looking at
-            visualTrackerRay.origin = this.transform.position;
-            visualTrackerRay.direction = this.transform.forward;
+            visualTrackerRay.origin = playersVision.transform.position;
+            visualTrackerRay.direction = playersVision.transform.forward;
 
             //if player is looking at a trackable object
             if (Physics.Raycast(visualTrackerRay, out trackableObjectPlayerIsLookingAt, maxTrackableObjectDistance, trackableObjectLayer))
@@ -39,11 +38,6 @@ namespace Assets.Scripts.Trackers
                 {
                     //Debug.Log("Object already seen for " + trackableObjectsLookedAt[trackableObject] + " seconds");
                     trackableObjectsLookedAt[trackableObject] += Time.deltaTime;
-                    if(trackableObjectsLookedAt[trackableObject] > 10)
-                    {
-                        SaveData();
-                        ResetData();
-                    }
                 }
                 else
                 {
@@ -53,15 +47,9 @@ namespace Assets.Scripts.Trackers
             }
         }
 
-        void ResetData()
+        public override void ResetData()
         {
             trackableObjectsLookedAt.Clear();
-        }
-
-        void SaveData()
-        {
-            //temp solution for inserting data
-            PlayerData.Instance.InsertUserTrialVisualData("Beginning Room", trackableObjectsLookedAt);
         }
     }
 }

@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts;
 
-public class BeginningRoom : MonoBehaviour {
-
-    public bool completed = false;
-    public Transform nextTrialPosition;
-
+public class BeginningRoom : ITrialRoom {
+    
     GameObject Room;
     List<Door> beginningFrontDoors = new List<Door>();
 
@@ -24,7 +21,7 @@ public class BeginningRoom : MonoBehaviour {
     }
 
     //return the created room
-    public GameObject Intialise(Transform position)
+    override public void Intialise(Transform position)
     {
         //Instantiate a prefab through code in C#. - Unity Answers [Internet]. [cited 2017 Nov 15]. 
         //Available from: https://answers.unity.com/questions/12003/instantiate-a-prefab-through-code-in-c.html
@@ -35,9 +32,16 @@ public class BeginningRoom : MonoBehaviour {
         SetupDoorway("FrontWall", Direction.Straight);
         SetupDoorway("LeftWall", Direction.Left);
         SetupDoorway("RightWall", Direction.Right);
+        
+        PlayerController.Instance.transform.position = Room.transform.Find("StartPoint").position;
 
         Debug.Log("BeginningRoom Intialised");
-        return Room;
+    }
+
+    public override void ProvideSetupInstructions(ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits)
+    {
+        //throw here because the beginning room should not be recieving instructions to be set up
+        throw new System.NotImplementedException();
     }
 
     void SetupDoorway(string Wall, Direction direction)
@@ -115,15 +119,15 @@ public class BeginningRoom : MonoBehaviour {
     void TrialCompleted(object sender)
     {
         Corridor corridor = sender as Corridor;
-
-        completed = true;
-        Debug.Log("begginging room completed");
-
+        
         //get front door + lock it and backdoor position for new trial
         corridor.front.locked = true;
         nextTrialPosition = corridor.nextTrialPosition;
 
         //disable trigger in corridor so that the player cant trigger it multiple times
         corridor.transform.GetComponent<BoxCollider>().enabled = false;
+
+        TrialFinished();
+        Debug.Log("begginging room completed");
     }
 }

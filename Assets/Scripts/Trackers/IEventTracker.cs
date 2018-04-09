@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Trackers;
 
-public interface IEventTracker
+public abstract class IEventTracker : MonoBehaviour
 {
-    void TrackEvent(TrackableEventObject eventObject);
+    public List<TrackableEventObject> ObjectsTracked = new List<TrackableEventObject>();
+    public abstract void TrackEvent(TrackableEventObject eventObject);
+
+    public abstract void ResetData();
 }
