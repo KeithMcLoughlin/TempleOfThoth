@@ -37,17 +37,34 @@ public class TrialManager : MonoBehaviour
         beginningRoom.OnTrialCompleted += LoadNextTrial;
 
         //set trial document generator
-        PlayerData.Instance.DocumentGeneratorForCurrentTrial = new BeginingRoomDocumentGenerator();
+        PlayerData.Instance.DocumentGeneratorForCurrentTrial = beginningRoom.DocumentGeneratorForTrial;
     }
 
     void LoadNextTrial(Transform nextTrialPosition)
     {
-        var nextTrial = TrialsInOrder.Pop();
-        LogicAgent.Instance.CalculatePlayerPreferrences(out predicatedBestTraits, out predicatedWorstTraits);
-        nextTrial.Intialise(nextTrialPosition);
-        nextTrial.ProvideSetupInstructions(predicatedBestTraits, predicatedWorstTraits);
-        nextTrial.OnTrialCompleted += LoadNextTrial;
+        //notify that the current trial is completed
         TrialCompleted();
+
+        var moreTrials = TrialsInOrder.Count > 0;
+        if (moreTrials)
+        {
+            //get next trial script from the stack
+            var nextTrial = TrialsInOrder.Pop();
+            //query for instructions for setting trial up
+            LogicAgent.Instance.CalculatePlayerPreferrences(out predicatedBestTraits, out predicatedWorstTraits);
+            //intialise trial + provide it the instructions recieved from the agent
+            nextTrial.Intialise(nextTrialPosition);
+            nextTrial.ProvideSetupInstructions(predicatedBestTraits, predicatedWorstTraits);
+            //setup its completed event to this method
+            nextTrial.OnTrialCompleted += LoadNextTrial;
+            //provide the new trial document generator for the data manager
+            PlayerData.Instance.DocumentGeneratorForCurrentTrial = nextTrial.DocumentGeneratorForTrial;
+        }
+        else
+        {
+            //todo allow for game to fully be completed
+            Debug.Log("Game Completed");
+        }
     }
 
     private void TrialCompleted()

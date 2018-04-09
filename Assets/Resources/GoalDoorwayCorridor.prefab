@@ -37,6 +37,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4529569795397058}
+  - component: {fileID: 65159093582552064}
+  - component: {fileID: 114323855209146312}
   m_Layer: 0
   m_Name: GoalDoorwayCorridor
   m_TagString: Untagged
@@ -92,7 +94,6 @@ GameObject:
   - component: {fileID: 65361339116579824}
   - component: {fileID: 23316621427197540}
   - component: {fileID: 114602347563390108}
-  - component: {fileID: 65656343156372278}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -286,7 +287,6 @@ GameObject:
   - component: {fileID: 65604983381017726}
   - component: {fileID: 23975665324023250}
   - component: {fileID: 114355439361991650}
-  - component: {fileID: 65912756115505406}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -1147,6 +1147,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65159093582552064
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1076656444279428}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 8, z: 8}
+  m_Center: {x: 0, y: 5, z: 0}
 --- !u!65 &65239661506314568
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -1243,18 +1255,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &65656343156372278
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1411566987636236}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: -1, z: 0}
 --- !u!65 &65687861946220268
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -1279,18 +1279,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &65912756115505406
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1942715405863570}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: -1, z: 0}
 --- !u!65 &65927208320161008
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -1315,6 +1303,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114323855209146312
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1076656444279428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88b9b3d3236bb4d40be7a1f14ea86a3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  front: {fileID: 0}
+  nextTrialPosition: {fileID: 0}
 --- !u!114 &114355439361991650
 MonoBehaviour:
   m_ObjectHideFlags: 1

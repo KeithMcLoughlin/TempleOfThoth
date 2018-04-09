@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts;
 using Assets.Scripts.Triggerables;
+using Assets.Scripts.Data;
 
 public class SplitDecisionTrialRoom : ITrialRoom {
 
-    public int totalNumberOfDecisions = 3;
+    public static int totalNumberOfDecisions = 3;
     int numberOfChoicesMade = 0;
     GameObject Room;
     GameObject NextDecisionCorridor;
@@ -23,6 +24,11 @@ public class SplitDecisionTrialRoom : ITrialRoom {
     public override void ProvideSetupInstructions(ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits)
     {
         SetupDecision(Room, effectiveTraits, ineffectiveTraits, false);
+    }
+
+    private void Start()
+    {
+        DocumentGeneratorForTrial = new SplitDecisionTrialDocumentGenerator();
     }
 
     void SetupDeadEndCorridor(Transform corridor)
@@ -103,8 +109,11 @@ public class SplitDecisionTrialRoom : ITrialRoom {
         //setup the deadend and progression corridors
         SetupDeadEndCorridor(deadendCorridor);
         //provide the end goal if its the last decision the player needs to make or else continue building the trial
-        if(lastDecision)
+        if (lastDecision)
+        {
             SetupProgressCorridor(progressCorridor, "GoalDoorwayCorridor");
+            NextDecisionCorridor.transform.GetComponent<Corridor>().OnCorridorEntered += TrialCompleted;
+        }
         else
             SetupProgressCorridor(progressCorridor, "50_50 Decision");
         
@@ -125,6 +134,19 @@ public class SplitDecisionTrialRoom : ITrialRoom {
         //setup the traits for the newly created corridors
         deadendCorridorScript.Traits = new ObjectTraits(effectiveTraits.Colour, deadendDirection, effectiveTraits.Lighting);
         progressCorridorScript.Traits = new ObjectTraits(ineffectiveTraits.Colour, progressionDirection, ineffectiveTraits.Lighting);
+
+        //track the details of the choice that are presented before the choice is made
+        //wanted to track them in order from left to right
+        if(deadendCorridorScript.Traits.Direction == Direction.Left)
+        {
+            deadendCorridorScript.TrackEvent();
+            progressCorridorScript.TrackEvent();
+        }
+        else
+        {
+            progressCorridorScript.TrackEvent();
+            deadendCorridorScript.TrackEvent();
+        }
     }
 
     void NextDecision()
@@ -135,12 +157,29 @@ public class SplitDecisionTrialRoom : ITrialRoom {
 
         numberOfChoicesMade++;
         //bool to determine if we should build the end goal
-        var isLastDecision = numberOfChoicesMade >= totalNumberOfDecisions;
+        var isLastDecision = numberOfChoicesMade == totalNumberOfDecisions - 1;
 
-        ObjectTraits predictedBestTraits;
-        ObjectTraits predictedWorstTraits;
-        //query logic agent to get next set of predictions and setup next decision to be made
-        LogicAgent.Instance.CalculatePlayerPreferrences(out predictedBestTraits, out predictedWorstTraits);
-        SetupDecision(NextDecisionCorridor, predictedBestTraits, predictedWorstTraits, isLastDecision);
+        if (numberOfChoicesMade <= totalNumberOfDecisions)
+        {
+            ObjectTraits predictedBestTraits;
+            ObjectTraits predictedWorstTraits;
+            //query logic agent to get next set of predictions and setup next decision to be made
+            LogicAgent.Instance.CalculatePlayerPreferrences(out predictedBestTraits, out predictedWorstTraits);
+            SetupDecision(NextDecisionCorridor, predictedBestTraits, predictedWorstTraits, isLastDecision);
+        }
+    }
+
+    void TrialCompleted(object sender)
+    {
+        Corridor corridor = sender as Corridor;
+
+        //get position for next trial
+        nextTrialPosition = corridor.nextTrialPosition;
+
+        //disable trigger in corridor so that the player cant trigger it multiple times
+        corridor.transform.GetComponent<BoxCollider>().enabled = false;
+
+        Debug.Log("split decision trial completed");
+        TrialFinished();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.Data;
 using Assets.Scripts;
 
 public class BeginningRoom : ITrialRoom {
@@ -18,6 +19,11 @@ public class BeginningRoom : ITrialRoom {
     Lighting GetRandomLighting()
     {
         return lightingTypes[Random.Range(0, lightingTypes.Count - 1)];
+    }
+
+    private void Awake()
+    {
+        DocumentGeneratorForTrial = new BeginingRoomDocumentGenerator();
     }
 
     //return the created room
@@ -127,7 +133,7 @@ public class BeginningRoom : ITrialRoom {
         //disable trigger in corridor so that the player cant trigger it multiple times
         corridor.transform.GetComponent<BoxCollider>().enabled = false;
 
-        TrialFinished();
         Debug.Log("begginging room completed");
+        TrialFinished();
     }
 }

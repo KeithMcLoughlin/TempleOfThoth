@@ -165,7 +165,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 566e390235786b34089688bdf59514cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  completed: 0
   nextTrialPosition: {fileID: 0}
 --- !u!114 &473411744
 MonoBehaviour:
@@ -178,7 +177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c237d7fd760b9d24d86a241c66b15a10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalNumberOfDecisions: 3
+  nextTrialPosition: {fileID: 0}
 --- !u!1 &1016718434
 GameObject:
   m_ObjectHideFlags: 0
@@ -219,6 +218,35 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1229252877 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1612330883180492, guid: e6e481ffd2324b14896974390825bdf2,
+    type: 2}
+  m_PrefabInternal: {fileID: 1261053358}
+--- !u!114 &1229252880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1229252877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8a5fafb2e2cef847bde9bd82160a383, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxTrackableObjectDistance: 50
+--- !u!114 &1229252881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1229252877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef490ec6b9229b741b46ef41bc04f6f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectsTracked: []
 --- !u!1 &1256869986
 GameObject:
   m_ObjectHideFlags: 0
@@ -306,9 +334,10 @@ Prefab:
     - target: {fileID: 224539523549190458, guid: e6e481ffd2324b14896974390825bdf2,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 110.66667
+      value: 94.333336
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114348034893443120, guid: e6e481ffd2324b14896974390825bdf2, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: e6e481ffd2324b14896974390825bdf2, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &2059458310
