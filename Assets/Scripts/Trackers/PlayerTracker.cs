@@ -38,8 +38,12 @@ public class PlayerTracker : MonoBehaviour
 
     public void UpdatePlayerData()
     {
-        //PlayerData.Instance.UpdateData(traits);
         //get data from both trackers + pass to player data
         Debug.Log("Updating player data");
+        PlayerData.Instance.InsertTrialData(eventTracker.ObjectsTracked, visualTracker.TrackableObjectsLookedAt);
+
+        //reset the data for the next trial
+        eventTracker.ResetData();
+        visualTracker.ResetData();
     }
 }

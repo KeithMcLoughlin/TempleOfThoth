@@ -9,7 +9,7 @@ namespace Assets.Scripts.Data
 {
     public class VisualTrackerDocumentGenerator
     {
-        public BsonDocument GenerateDocument(string trialName, Dictionary<TrackableEventObject, float> objectsLookedAt)
+        public BsonDocument GenerateDocument(string trialName, BsonValue userId, Dictionary<TrackableEventObject, float> objectsLookedAt)
         {
             BsonArray objectsLookedAtWithTraitsAndTime = new BsonArray();
             foreach(TrackableEventObject trackableObject in objectsLookedAt.Keys)
@@ -28,6 +28,7 @@ namespace Assets.Scripts.Data
             var document = new BsonDocument
             {
                 {"TrialName", trialName },
+                {"UserID", userId },
                 {"ObjectsLookedAt", objectsLookedAtWithTraitsAndTime }
             };
 

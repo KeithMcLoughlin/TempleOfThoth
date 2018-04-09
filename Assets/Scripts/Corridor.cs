@@ -11,12 +11,12 @@ public class Corridor : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
+        front.TrackEvent();
+
         //notify that player has entered corridor so they can be used as load zones
         if (OnCorridorEntered != null)
         {
             OnCorridorEntered(this);
         }
-
-        front.TrackEvent();
     }
 }

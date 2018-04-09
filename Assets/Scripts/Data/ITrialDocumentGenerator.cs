@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MongoDB.Bson;
+using Assets.Scripts.Trackers;
 
 namespace Assets.Scripts.Data
 {
-    public interface ITrialDocumentGenerator
+    public interface ITrialEventDocumentGenerator
     {
-        BsonDocument GenerateDocument(ObjectTraits traits, BsonValue userId);
+        BsonDocument GenerateDocument(BsonValue userId, List<TrackableEventObject> eventData);
     }
 }

@@ -3,13 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MongoDB.Bson;
+using Assets.Scripts.Trackers;
+using UnityEngine;
 
 namespace Assets.Scripts.Data
 {
-    public class BeginingRoomDocumentGenerator : ITrialDocumentGenerator
+    public class BeginingRoomDocumentGenerator : ITrialEventDocumentGenerator
     {
-        public BsonDocument GenerateDocument(ObjectTraits traits, BsonValue userId)
+        public BsonDocument GenerateDocument(BsonValue userId, List<TrackableEventObject> eventData)
         {
+            if (eventData.Count != 1)
+            {
+                //throw error
+            }
+
+            var traits = eventData[0].Traits;
+
             var document = new BsonDocument
             {
                 {"TrialName", "BeginningRoom" },
