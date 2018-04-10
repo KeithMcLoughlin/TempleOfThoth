@@ -30,6 +30,7 @@ public class CameraMouseMovement : MonoBehaviour {
         Cursor.visible = false;
         interactableLayer = LayerMask.GetMask("Interactable");
         playerCursorImage = playerCursor.GetComponent<Image>();
+        interactIndicator = new Ray();
     }
 	
 	void Update ()

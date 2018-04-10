@@ -19,4 +19,14 @@ public class LogicAgent : MonoBehaviour
         predicatedEffectiveTraits = new ObjectTraits(Color.red, Direction.Left, Lighting.Bright);
         predicatedIneffectiveTraits = new ObjectTraits(Color.blue, Direction.Right, Lighting.None);
     }
+    /*
+    public void GenerateInstructionsForTrial(ITrialRoom trial, out ObjectTraits predicatedEffectiveTraits, out ObjectTraits predicatedIneffectiveTraits)
+    {
+
+    }
+    */
+    private void GenerateInstructionsForSplitDecisionTrial()
+    {
+
+    }
 }

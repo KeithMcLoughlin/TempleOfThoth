@@ -7,7 +7,6 @@ using Assets.Scripts;
 public class BeginningRoom : ITrialRoom {
     
     GameObject Room;
-    List<Door> beginningFrontDoors = new List<Door>();
 
     List<Color> UsableColours = new List<Color> { Color.yellow, Color.red, Color.green, Color.blue, Color.black, Color.cyan, Color.magenta, Color.grey };
     Color GetRandomColour(IList<Color> selectableColours)

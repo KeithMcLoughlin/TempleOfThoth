@@ -136,7 +136,7 @@ public class SplitDecisionTrialRoom : ITrialRoom {
         progressCorridorScript.Traits = new ObjectTraits(ineffectiveTraits.Colour, progressionDirection, ineffectiveTraits.Lighting);
 
         //track the details of the choice that are presented before the choice is made
-        //wanted to track them in order from left to right
+        //want to track them in order from left to right
         Debug.Log("Tracking Decision Choices");
         if(deadendCorridorScript.Traits.Direction == Direction.Left)
         {

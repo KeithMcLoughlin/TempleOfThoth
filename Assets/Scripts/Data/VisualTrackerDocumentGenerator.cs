@@ -9,18 +9,20 @@ namespace Assets.Scripts.Data
 {
     public class VisualTrackerDocumentGenerator
     {
-        public BsonDocument GenerateDocument(string trialName, BsonValue userId, Dictionary<TrackableEventObject, float> objectsLookedAt)
+        public BsonDocument GenerateDocument(string trialName, BsonValue userId, List<VisualTrackerObjectDetails> objectsLookedAt)
         {
             BsonArray objectsLookedAtWithTraitsAndTime = new BsonArray();
-            foreach(TrackableEventObject trackableObject in objectsLookedAt.Keys)
+            foreach(var viewedObject in objectsLookedAt)
             {
+                var trackableObject = viewedObject.ObjectLookedAt;
+                var timeSpentLookingAtIt = viewedObject.TimeSpentLookingAtObject;
                 BsonDocument data = new BsonDocument
                 {
                     {"Object Type", trackableObject.name },
                     {"Color", trackableObject.Traits.Colour.ToString() },
                     {"Direction", trackableObject.Traits.Direction.ToString() },
                     {"Lighting", trackableObject.Traits.Lighting.ToString() },
-                    {"Time Spent Viewing", objectsLookedAt[trackableObject] }
+                    {"Time Spent Viewing", timeSpentLookingAtIt }
                 };
                 objectsLookedAtWithTraitsAndTime.Add(data);
             }
