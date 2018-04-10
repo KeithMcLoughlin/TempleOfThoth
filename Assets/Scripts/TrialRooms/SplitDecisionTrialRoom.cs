@@ -137,6 +137,7 @@ public class SplitDecisionTrialRoom : ITrialRoom {
 
         //track the details of the choice that are presented before the choice is made
         //wanted to track them in order from left to right
+        Debug.Log("Tracking Decision Choices");
         if(deadendCorridorScript.Traits.Direction == Direction.Left)
         {
             deadendCorridorScript.TrackEvent();
@@ -159,8 +160,9 @@ public class SplitDecisionTrialRoom : ITrialRoom {
         //bool to determine if we should build the end goal
         var isLastDecision = numberOfChoicesMade == totalNumberOfDecisions - 1;
 
-        if (numberOfChoicesMade <= totalNumberOfDecisions)
+        if (numberOfChoicesMade <= totalNumberOfDecisions - 1)
         {
+            Debug.Log("Setting up decisions");
             ObjectTraits predictedBestTraits;
             ObjectTraits predictedWorstTraits;
             //query logic agent to get next set of predictions and setup next decision to be made
