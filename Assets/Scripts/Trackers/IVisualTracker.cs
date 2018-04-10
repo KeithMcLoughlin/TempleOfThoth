@@ -20,11 +20,23 @@ public abstract class IVisualTracker : MonoBehaviour
 public class VisualTrackerObjectDetails
 {
     public TrackableEventObject ObjectLookedAt { get; set; }
-    public float TimeSpentLookingAtObject { get; set; }
+    public float TimeSpentLookingAtObject
+    {
+        //return time spent rounded to two decimal places
+        get
+        {
+            return Mathf.Round(timeSpentLookingAtObject * 100f) / 100f;
+        }
+        set
+        {
+            timeSpentLookingAtObject = value;
+        }
+    }
+    private float timeSpentLookingAtObject;
 
     public VisualTrackerObjectDetails(TrackableEventObject objectLookedAt)
     {
         ObjectLookedAt = objectLookedAt;
-        TimeSpentLookingAtObject = 0.0f;
+        timeSpentLookingAtObject = 0.0f;
     }
 }
