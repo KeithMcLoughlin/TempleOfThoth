@@ -53,7 +53,7 @@ namespace Assets.Scripts.Trackers
         private void EditObjectsSeen(TrackableEventObject trackableObject)
         {
             var traits = trackableObject.Traits;
-            Debug.Log("Looking at \"" + trackableObject.name + "\" of colour " + traits.Colour);
+            //Debug.Log("Looking at \"" + trackableObject.name + "\" of colour " + traits.Colour);
 
             //check if the object has already been seen and add to the time spent looking at it
             var objectAlreadySeen = trackableObjectsLookedAt.Find(x => x.ObjectLookedAt == trackableObject);

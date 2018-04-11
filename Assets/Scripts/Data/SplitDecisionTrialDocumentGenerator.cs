@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using MongoDB.Bson;
 using Assets.Scripts.Trackers;
+using Assets.Scripts.Data;
 using UnityEngine;
 
 namespace Assets.Scripts.Data
@@ -40,24 +41,36 @@ namespace Assets.Scripts.Data
         private BsonDocument ConvertDecisionDetailsToDocument(int decisionNumber, ObjectTraits leftChoiceTraits, ObjectTraits rightChoiceTraits, Direction choice)
         {
             string decisionTitle = "Decision" + decisionNumber;
-            return new BsonDocument {
+            ObjectTraits decisionTraits;
+            ObjectTraits ignoredTraits;
+            if (leftChoiceTraits.Direction == choice)
+            {
+                decisionTraits = leftChoiceTraits;
+                ignoredTraits = rightChoiceTraits;
+            }
+            else
+            {
+                decisionTraits = rightChoiceTraits;
+                ignoredTraits = leftChoiceTraits;
+            }
+
+                return new BsonDocument {
                 {
                     decisionTitle, new BsonDocument {
-                        { "Left Choice", new BsonDocument
+                        { "Decision Choice", new BsonDocument
                             {
-                                { "Color", leftChoiceTraits.Colour.ToString() },
-                                { "Direction", leftChoiceTraits.Direction.ToString() },
-                                { "Lighting", leftChoiceTraits.Lighting.ToString() }
+                                { "Color", ColorToEnumConverter.ColorToColourEnum(decisionTraits.Colour).ToString() },
+                                { "Direction", decisionTraits.Direction.ToString() },
+                                { "Lighting", decisionTraits.Lighting.ToString() }
                             }
                         },
-                        { "Right Choice", new BsonDocument
+                        { "Ignored Choice", new BsonDocument
                             {
-                                { "Color", rightChoiceTraits.Colour.ToString() },
-                                { "Direction", rightChoiceTraits.Direction.ToString() },
-                                { "Lighting", rightChoiceTraits.Lighting.ToString() }
+                                { "Color", ColorToEnumConverter.ColorToColourEnum(ignoredTraits.Colour).ToString() },
+                                { "Direction", ignoredTraits.Direction.ToString() },
+                                { "Lighting", ignoredTraits.Lighting.ToString() }
                             }
-                        },
-                        { "Decision", choice.ToString() }
+                        }
                     }
                 }
             };

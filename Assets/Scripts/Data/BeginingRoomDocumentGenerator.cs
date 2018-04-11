@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using MongoDB.Bson;
 using Assets.Scripts.Trackers;
+using Assets.Scripts.Data;
 using UnityEngine;
 
 namespace Assets.Scripts.Data
@@ -24,7 +25,7 @@ namespace Assets.Scripts.Data
                 {"TrialName", "BeginningRoom" },
                 {"UserID", userId },
                 {"DoorChoice", new BsonDocument {
-                    {"Color", traits.Colour.ToString() },
+                    {"Color", ColorToEnumConverter.ColorToColourEnum(traits.Colour).ToString() },
                     {"Direction", traits.Direction.ToString() },
                     {"Lighting", traits.Lighting.ToString() }
                 }}

@@ -14,7 +14,8 @@ public class LogicAgent : MonoBehaviour
     public void CalculatePlayerPreferrences(out ObjectTraits predicatedEffectiveTraits, out ObjectTraits predicatedIneffectiveTraits)
     {
         var data = PlayerData.Instance;
-        
+
+        data.QuerySplitDecisionTrialData(0);
 
         predicatedEffectiveTraits = new ObjectTraits(Color.red, Direction.Left, Lighting.Bright);
         predicatedIneffectiveTraits = new ObjectTraits(Color.blue, Direction.Right, Lighting.None);

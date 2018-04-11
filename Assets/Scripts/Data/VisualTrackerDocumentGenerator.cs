@@ -5,6 +5,7 @@ using System.Text;
 using MongoDB.Bson;
 using UnityEngine;
 using Assets.Scripts.Trackers;
+using Assets.Scripts.Data;
 
 namespace Assets.Scripts.Data
 {
@@ -17,11 +18,10 @@ namespace Assets.Scripts.Data
             {
                 var trackableObject = viewedObject.ObjectLookedAt;
                 var timeSpentLookingAtIt = viewedObject.TimeSpentLookingAtObject;
-                Debug.Log("Generator: " + timeSpentLookingAtIt);
                 BsonDocument data = new BsonDocument
                 {
                     {"Object Type", trackableObject.name },
-                    {"Color", trackableObject.Traits.Colour.ToString() },
+                    {"Color", ColorToEnumConverter.ColorToColourEnum(trackableObject.Traits.Colour).ToString() },
                     {"Direction", trackableObject.Traits.Direction.ToString() },
                     {"Lighting", trackableObject.Traits.Lighting.ToString() },
                     {"Time Spent Viewing", timeSpentLookingAtIt.ToString() }
