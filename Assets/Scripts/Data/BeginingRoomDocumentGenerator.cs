@@ -13,6 +13,7 @@ namespace Assets.Scripts.Data
     {
         public BsonDocument GenerateDocument(BsonValue userId, List<TrackableEventObject> eventData)
         {
+            Debug.Log("Userid: " + userId);
             if (eventData.Count != 1)
             {
                 //throw error

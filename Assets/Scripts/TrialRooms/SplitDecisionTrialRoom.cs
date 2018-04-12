@@ -29,6 +29,7 @@ public class SplitDecisionTrialRoom : ITrialRoom {
     private void Start()
     {
         DocumentGeneratorForTrial = new SplitDecisionTrialDocumentGenerator();
+        TrialName = "Split Decision Trial";
     }
 
     void SetupDeadEndCorridor(Transform corridor)
@@ -166,7 +167,7 @@ public class SplitDecisionTrialRoom : ITrialRoom {
             ObjectTraits predictedBestTraits;
             ObjectTraits predictedWorstTraits;
             //query logic agent to get next set of predictions and setup next decision to be made
-            LogicAgent.Instance.CalculatePlayerPreferrences(out predictedBestTraits, out predictedWorstTraits);
+            LogicAgent.Instance.CalculateNextDecision(numberOfChoicesMade, out predictedBestTraits, out predictedWorstTraits);
             SetupDecision(NextDecisionCorridor, predictedBestTraits, predictedWorstTraits, isLastDecision);
         }
     }

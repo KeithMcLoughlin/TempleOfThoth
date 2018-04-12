@@ -11,6 +11,7 @@ public abstract class ITrialRoom : MonoBehaviour
     abstract public void ProvideSetupInstructions(ObjectTraits effectiveTraits, ObjectTraits ineffectiveTraits);
     public ITrialEventDocumentGenerator DocumentGeneratorForTrial;
     public Transform nextTrialPosition;
+    public string TrialName;
 
     protected void TrialFinished()
     {

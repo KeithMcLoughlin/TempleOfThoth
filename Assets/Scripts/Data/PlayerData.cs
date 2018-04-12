@@ -10,8 +10,9 @@ using Assets.Scripts.Trackers;
 public class PlayerData : MonoBehaviour
 {
     public static PlayerData Instance { get; private set; }
-    public BsonValue CurrentUserID;
-    public UserDetails CurrentUserDetails;
+    public BsonValue CurrentUserID { get { return CurrentUserDocument["_id"]; } }
+    public BsonDocument CurrentUserDocument { get { return currentUserDocumentValue.ToBsonDocument(); } }
+    private BsonValue currentUserDocumentValue;
     public ITrialEventDocumentGenerator DocumentGeneratorForCurrentTrial;
     VisualTrackerDocumentGenerator visualTrackerDocumentGenerator = new VisualTrackerDocumentGenerator();
     List<BsonDocument> currentUserTrialEventDetails = new List<BsonDocument>();
@@ -31,15 +32,13 @@ public class PlayerData : MonoBehaviour
         MongoDatabase db = server.GetDatabase("templeofthothstats");
         MongoCollection<BsonDocument> users = db.GetCollection<BsonDocument>("users");
 
-        CurrentUserDetails = details;
-
         //convert details to bson document in order to retrieve its appointed id
         var currentUserDocument = details.ToBsonDocument();
-        CurrentUserID = currentUserDocument["_id"];
 
         //insert a user
         users.Insert(currentUserDocument);
-        Debug.Log("New users id is: " + CurrentUserID);
+        currentUserDocumentValue = currentUserDocument.DeepClone();
+        Debug.Log("doc: " + CurrentUserDocument);
     }
     
     public void InsertTrialData(List<TrackableEventObject> eventData, List<VisualTrackerObjectDetails> visualData)
@@ -49,7 +48,7 @@ public class PlayerData : MonoBehaviour
         MongoDatabase db = server.GetDatabase("templeofthothstats");
         MongoCollection<BsonDocument> trialCollection = db.GetCollection<BsonDocument>("Trials");
         MongoCollection<BsonDocument> visualDataCollection = db.GetCollection<BsonDocument>("VisualData");
-
+        
         var trialEventDocument = DocumentGeneratorForCurrentTrial.GenerateDocument(CurrentUserID, eventData);
         var trialName = trialEventDocument["TrialName"].ToString();
         trialCollection.Insert(trialEventDocument);
@@ -63,27 +62,21 @@ public class PlayerData : MonoBehaviour
         Debug.Log("Inserted Data into database for trial '" + trialName + "'");
     }
 
-    public void QuerySplitDecisionTrialData(int decisionNumber)
+    public SplitDecisionTrialQueryResults QuerySplitDecisionTrialData(int decisionNumber)
     {
         MongoClient client = new MongoClient("mongodb://kmcl:12081995@ds119988.mlab.com:19988/templeofthothstats");
         MongoServer server = client.GetServer();
         MongoDatabase db = server.GetDatabase("templeofthothstats");
-        //MongoCollection<BsonDocument> usersCollection = db.GetCollection<BsonDocument>("users");
+        MongoCollection<BsonDocument> usersCollection = db.GetCollection<BsonDocument>("users");
         MongoCollection<BsonDocument> trialCollection = db.GetCollection<BsonDocument>("Trials");
         //MongoCollection<BsonDocument> visualDataCollection = db.GetCollection<BsonDocument>("VisualData");
 
+        var allUsers = usersCollection.FindAll();
+        var sameGenderUsers = usersCollection.Find(new QueryDocument("Gender", CurrentUserDocument["Gender"]));
+        var sameAgeRangeUsers = usersCollection.Find(new QueryDocument("AgeRange", CurrentUserDocument["AgeRange"]));
+        var sameNationalityUsers = usersCollection.Find(new QueryDocument("Nationality", CurrentUserDocument["Nationality"]));
 
-
-        /*var genderComparisonString = "Gender: '" + CurrentUserDetails.Gender + "'";
-        var ageComparisonString = "AgeRange: '" + CurrentUserDetails.AgeRange + "'";
-        var nationalityComparisonString = "Nationality: '" + CurrentUserDetails.Nationality + "'";
-
-        var sameGenderFilter = "{ " + genderComparisonString + " }";
-        var sameAgeFilter = "{ " + ageComparisonString + " }";
-        var sameNationalityFilter = "{ " + nationalityComparisonString +" }";
-        var sameGenderNationalityFilter = 
-        */
-
+        /*
         var details = new DecisionDetails();
         Debug.Log("Querying DB");
         details.TotalChoices = trialCollection.Find(new QueryDocument("TrialName", "SplitDecisionTrial")).Count<BsonDocument>();
@@ -100,8 +93,51 @@ public class PlayerData : MonoBehaviour
         GetMostAndLeastChosen<Colour>(trialCollection, decisionNumber, "Color",
                               out details.MostPickedColour, out details.LeastPickedColour,
                               out details.CountOfMostPickedColour, out details.CountOfLeastPickedColour);
+
+        */
+
+        var queryResults = new SplitDecisionTrialQueryResults
+        {
+            AllUsers = GetDecisionDetailsForUserGroup(trialCollection, allUsers, decisionNumber),
+            SameGenderUsers = GetDecisionDetailsForUserGroup(trialCollection, sameGenderUsers, decisionNumber),
+            SameAgeGroupUsers = GetDecisionDetailsForUserGroup(trialCollection, sameAgeRangeUsers, decisionNumber),
+            SameNationalityUsers = GetDecisionDetailsForUserGroup(trialCollection, sameNationalityUsers, decisionNumber)
+        };
+
+        return queryResults;
     }
 
+    DecisionDetails GetDecisionDetailsForUserGroup(MongoCollection<BsonDocument> trialCollection, MongoCursor<BsonDocument> users, int decisionNumber)
+    {
+        var details = new DecisionDetails();
+        details.TotalChoices = 0;
+        details.RightChoiceCount = 0;
+
+        foreach(var user in users)
+        {
+            details.TotalChoices += trialCollection.Find(new QueryDocument {
+                { "TrialName", "SplitDecisionTrial" },
+                { "UserID", user["_id"] }
+            }).Count<BsonDocument>();
+            details.RightChoiceCount += trialCollection.Find(new QueryDocument {
+            { "TrialName", "SplitDecisionTrial" },
+            { "UserID", user["_id"] },
+            { "Decisions.Decision0.Decision Choice.Direction", "Right" }
+            }).Count<BsonDocument>();
+        }
+        details.LeftChoiceCount = details.TotalChoices - details.RightChoiceCount;
+
+        GetMostAndLeastChosenForUsers<Lighting>(trialCollection, users, decisionNumber, "Lighting",
+                              out details.MostPickedLighting, out details.LeastPickedLighting,
+                              out details.CountOfMostPickedLighting, out details.CountOfLeastPickedLighting);
+
+        GetMostAndLeastChosenForUsers<Colour>(trialCollection, users, decisionNumber, "Color",
+                              out details.MostPickedColour, out details.LeastPickedColour,
+                              out details.CountOfMostPickedColour, out details.CountOfLeastPickedColour);
+
+        return details;
+    }
+    /*
     void GetMostAndLeastChosen<TEnum>(MongoCollection<BsonDocument> trialCollection, int decisionNumber, string trait, 
                                   out TEnum mostChosenType, out TEnum leastChosenType, out int mostCount, out int leastCount)
     {
@@ -129,6 +165,48 @@ public class PlayerData : MonoBehaviour
                 { "Decisions.Decision" + decisionNumber + ".Ignored Choice." + trait, type.ToString() }
             }).Count<BsonDocument>();
 
+            if (ignoredCount >= leastCount)
+            {
+                leastCount = ignoredCount;
+                leastChosenType = type;
+            }
+        }
+        Debug.Log("Most chosen " + trait + ": " + mostChosenType.ToString() + ", chosen times: " + mostCount);
+        Debug.Log("Most ignored " + trait + ": " + leastChosenType.ToString() + ", ignored times: " + leastCount);
+    }
+    */
+    void GetMostAndLeastChosenForUsers<TEnum>(MongoCollection<BsonDocument> trialCollection, MongoCursor<BsonDocument> users, int decisionNumber, string trait,
+                                  out TEnum mostChosenType, out TEnum leastChosenType, out int mostCount, out int leastCount)
+    {
+        mostCount = 0;
+        leastCount = 0;
+        TEnum[] types = (TEnum[])System.Enum.GetValues(typeof(TEnum));
+        mostChosenType = types.First();
+        leastChosenType = types.First();
+        
+        foreach (var type in types)
+        {
+            var decisionCount = 0;
+            var ignoredCount = 0;
+            foreach (var user in users)
+            {
+                decisionCount += trialCollection.Find(new QueryDocument {
+                    { "TrialName", "SplitDecisionTrial" },
+                    { "UserID", user["_id"] },
+                    { "Decisions.Decision" + decisionNumber + ".Decision Choice." + trait, type.ToString() }
+                }).Count<BsonDocument>();
+
+                ignoredCount += trialCollection.Find(new QueryDocument {
+                    { "TrialName", "SplitDecisionTrial" },
+                    { "UserID", user["_id"] },
+                    { "Decisions.Decision" + decisionNumber + ".Ignored Choice." + trait, type.ToString() }
+                }).Count<BsonDocument>();
+            }
+            if (decisionCount >= mostCount)
+            {
+                mostCount = decisionCount;
+                mostChosenType = type;
+            }
             if (ignoredCount >= leastCount)
             {
                 leastCount = ignoredCount;

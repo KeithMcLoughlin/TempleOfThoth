@@ -23,6 +23,7 @@ public class BeginningRoom : ITrialRoom {
     private void Awake()
     {
         DocumentGeneratorForTrial = new BeginingRoomDocumentGenerator();
+        TrialName = "Beginning Room";
     }
 
     //return the created room

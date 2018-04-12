@@ -38,7 +38,6 @@ public class TrialManager : MonoBehaviour
 
         //set trial document generator
         PlayerData.Instance.DocumentGeneratorForCurrentTrial = beginningRoom.DocumentGeneratorForTrial;
-        PlayerData.Instance.QuerySplitDecisionTrialData(0);
     }
 
     void LoadNextTrial(Transform nextTrialPosition)
@@ -52,7 +51,7 @@ public class TrialManager : MonoBehaviour
             //get next trial script from the stack
             var nextTrial = TrialsInOrder.Pop();
             //query for instructions for setting trial up
-            LogicAgent.Instance.CalculatePlayerPreferrences(out predicatedBestTraits, out predicatedWorstTraits);
+            LogicAgent.Instance.GetTrialBeginningInstructions(nextTrial, out predicatedBestTraits, out predicatedWorstTraits);
             //intialise trial + provide it the instructions recieved from the agent
             nextTrial.Intialise(nextTrialPosition);
             nextTrial.ProvideSetupInstructions(predicatedBestTraits, predicatedWorstTraits);
