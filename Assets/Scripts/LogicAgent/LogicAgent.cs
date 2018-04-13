@@ -16,8 +16,6 @@ public class LogicAgent : MonoBehaviour
     {
         var data = PlayerData.Instance;
 
-        data.QuerySplitDecisionTrialData(0);
-
         predicatedEffectiveTraits = new ObjectTraits(Color.red, Direction.Left, Lighting.Bright);
         predicatedIneffectiveTraits = new ObjectTraits(Color.blue, Direction.Right, Lighting.None);
     }
@@ -28,6 +26,7 @@ public class LogicAgent : MonoBehaviour
         predicatedEffectiveTraits = new ObjectTraits(Color.red, Direction.Left, Lighting.Bright);
         predicatedIneffectiveTraits = new ObjectTraits(Color.blue, Direction.Right, Lighting.None);
         
+        //call the function relating to the trial
         switch (trial.TrialName)
         {
             case "Split Decision Trial": { CalculateNextDecision(0, out predicatedEffectiveTraits, out predicatedIneffectiveTraits); break; }
@@ -53,10 +52,12 @@ public class LogicAgent : MonoBehaviour
         float mostChosenColorPercentage = 0.0f;
         float leastChosenColorPercentage = 0.0f;
 
+        //converting the query results into a list so they can be looped through
         List<DecisionDetails> differentUserGroupDecisionDetails = new List<DecisionDetails> {
             queryResults.AllUsers, queryResults.SameGenderUsers, queryResults.SameAgeGroupUsers, queryResults.SameNationalityUsers
         };
 
+        //find the highest and lowest percentage of each trait chosen 
         foreach (var userGroup in differentUserGroupDecisionDetails)
         {
             var total = (float)userGroup.TotalChoices;
@@ -66,6 +67,7 @@ public class LogicAgent : MonoBehaviour
             var usersMostDirectionPercent = 0.0f;
             var usersMostChosenDirection = Direction.Left;
 
+            //find if right or left was the most chosen and store the percentage and direction
             if (rightDirectionPercentage > leftDirectionPercentage)
             {
                 usersMostDirectionPercent = rightDirectionPercentage;
@@ -77,6 +79,7 @@ public class LogicAgent : MonoBehaviour
                 usersMostChosenDirection = Direction.Left;
             }
 
+            //if its the highest percentage over all user groups, assign it as the most effective trait
             if (usersMostDirectionPercent > mostDirectionPercent)
             {
                 mostDirectionPercent = usersMostDirectionPercent;
@@ -116,9 +119,11 @@ public class LogicAgent : MonoBehaviour
             }
         }
 
+        //ensure that both the effective and ineffective are the inverse of  each other
         if (effectiveDirection == Direction.Right) ineffectiveDirection = Direction.Left;
         else ineffectiveDirection = Direction.Right;
-
+        
+        //set the out parameters
         predicatedEffectiveTraits = new ObjectTraits(effectiveColor, effectiveDirection, effectiveLighting);
         predicatedIneffectiveTraits = new ObjectTraits(ineffectiveColor, ineffectiveDirection, ineffectiveLighting);
     }

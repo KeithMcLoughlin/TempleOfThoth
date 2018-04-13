@@ -38,6 +38,7 @@ public class TrialManager : MonoBehaviour
 
         //set trial document generator
         PlayerData.Instance.DocumentGeneratorForCurrentTrial = beginningRoom.DocumentGeneratorForTrial;
+        //PlayerData.Instance.QuerySplitDecisionTrialData(0);
     }
 
     void LoadNextTrial(Transform nextTrialPosition)

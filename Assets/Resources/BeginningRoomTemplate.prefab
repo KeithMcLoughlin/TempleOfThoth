@@ -1962,7 +1962,8 @@ GameObject:
   - component: {fileID: 33405604114017552}
   - component: {fileID: 65504228329383480}
   - component: {fileID: 23451785955594700}
-  m_Layer: 0
+  - component: {fileID: 114831932396487584}
+  m_Layer: 9
   m_Name: Pedastal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8295,6 +8296,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   front: {fileID: 114355263419996646}
   nextTrialPosition: {fileID: 4178376191688478}
+--- !u!114 &114831932396487584
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1987048093677550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dae983eeb71b4f24d914d168aa392ede, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114925955212093190
 MonoBehaviour:
   m_ObjectHideFlags: 1

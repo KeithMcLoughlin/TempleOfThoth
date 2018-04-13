@@ -166,6 +166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextTrialPosition: {fileID: 0}
+  TrialName: 
 --- !u!114 &473411744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,6 +179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextTrialPosition: {fileID: 0}
+  TrialName: 
 --- !u!1 &1016718434
 GameObject:
   m_ObjectHideFlags: 0
@@ -334,7 +336,7 @@ Prefab:
     - target: {fileID: 224539523549190458, guid: e6e481ffd2324b14896974390825bdf2,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 94.333336
+      value: 107.333336
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114348034893443120, guid: e6e481ffd2324b14896974390825bdf2, type: 2}

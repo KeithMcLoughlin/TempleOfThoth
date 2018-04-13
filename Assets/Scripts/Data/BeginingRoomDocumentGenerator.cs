@@ -13,10 +13,11 @@ namespace Assets.Scripts.Data
     {
         public BsonDocument GenerateDocument(BsonValue userId, List<TrackableEventObject> eventData)
         {
-            Debug.Log("Userid: " + userId);
+            //if the data passed in isn't only one object we know its wrong because the only event data for this
+            //trial should be the door chosen
             if (eventData.Count != 1)
             {
-                //throw error
+                throw new Exception("Wrong data provided. Unable to generate document.");
             }
 
             var traits = eventData[0].Traits;

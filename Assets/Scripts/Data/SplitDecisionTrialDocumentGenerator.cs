@@ -13,9 +13,11 @@ namespace Assets.Scripts.Data
     {
         public BsonDocument GenerateDocument(BsonValue userId, List<TrackableEventObject> eventData)
         {
+            //if the data passed in isn't 9 objects we know its wrong because the event data for this
+            //trial should be 6 of the decision corridors and the 3 corridors the player chose
             if (eventData.Count != 9)
             {
-                //throw error
+                throw new Exception("Wrong data provided. Unable to generate document.");
             }
 
             BsonArray decisions = new BsonArray();
@@ -38,11 +40,13 @@ namespace Assets.Scripts.Data
             return document;
         }
 
+        //create the document section that describes the chosen corridor traits and ignored corridor traits for a decision number
         private BsonDocument ConvertDecisionDetailsToDocument(int decisionNumber, ObjectTraits leftChoiceTraits, ObjectTraits rightChoiceTraits, Direction choice)
         {
             string decisionTitle = "Decision" + decisionNumber;
             ObjectTraits decisionTraits;
             ObjectTraits ignoredTraits;
+            //assign the traits of the chosen and ignored corridor based on the direction choose
             if (leftChoiceTraits.Direction == choice)
             {
                 decisionTraits = leftChoiceTraits;

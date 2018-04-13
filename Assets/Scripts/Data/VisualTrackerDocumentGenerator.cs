@@ -14,6 +14,8 @@ namespace Assets.Scripts.Data
         public BsonDocument GenerateDocument(string trialName, BsonValue userId, List<VisualTrackerObjectDetails> objectsLookedAt)
         {
             BsonArray objectsLookedAtWithTraitsAndTime = new BsonArray();
+
+            //create the section of the document for each object looked at
             foreach(var viewedObject in objectsLookedAt)
             {
                 var trackableObject = viewedObject.ObjectLookedAt;
